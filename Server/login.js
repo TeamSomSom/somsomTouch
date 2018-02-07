@@ -34,11 +34,47 @@ router.route('/process/login').post(function(req, res) {
 	var paramId = req.body.id || req.query.id;
 	var paramPassword = req.body.password || req.query.password;
 
+	// 로그인 라우팅 함수 - 로그인 후 세션 저장함
+	if (req.session.user) {
+		// 이미 로그인된 상태
+		console.log('이미 로그인되어 이동합니다.');
+		res.redirect('/loginConfrim.html');
+	} else {
+		// 세션 저장
+		req.session.user = {
+			id: paramId,
+			name: '소녀시대',
+			authorized: true
+		}
+	}
 	res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
 	res.write('<h1>Express 서버에서 응답한 결과입니다.</h1>');
 	res.write('<div><p>Param id: ' + paramId + '</p></div>');
 	res.write('<div><p>Param password: ' + paramPassword + '</p></div>');
+	res.write('<a href="/loginConfirm.html">컨펌 페이지로 이동하기</a>')
 	res.end();
+
+});
+
+// 로그아웃 라우팅 함수 - 로그아웃 후 세션 삭제함
+router.route('/process/logout').get(function(req, res){
+	console.log('/process/logout 호출됨')
+	
+	if (req.session.user) {
+		// 로그인된 상태
+		console.log('로그아웃합니다.');
+
+		req.session.destroy(function(err) {
+			if(err) {throw err;}
+		
+			console.log('세션을 삭제하고 로그아웃되었습니다.');
+			res.redirect('/login.html');
+		});
+	} else {
+		// 로그인 안된 상태
+		console.log('아직 로그인되어 있지 않습니다.');
+		res.redirect('/login.html')
+	}
 });
 
 router.route('/process/showCookie').get(function(req, res) {
@@ -66,13 +102,15 @@ router.route('/process/showCookie').get(function(req, res) {
      
      if(req.session.user) {
         console.log('session 있음');
-         res.redirect('/index.html');
+        res.redirect('/loginConfirm.html');
      }
      else {
         console.log('session 없음');
          res.redirect('/login.html');
      }
  });
+
+
 app.use('/', router);
 
 //error
