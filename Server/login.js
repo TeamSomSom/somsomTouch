@@ -110,7 +110,6 @@ router.route('/process/showCookie').get(function(req, res) {
      }
  });
 
-
 app.use('/', router);
 
 //error
