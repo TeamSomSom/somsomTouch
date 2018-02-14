@@ -26,7 +26,7 @@ app.use(express.static('public'));
 var router = express.Router();
 app.get('/login', function(req, res){
 	res.redirect('/login.html'); 
-})
+});
 
 router.route('/process/login').post(function(req, res) {
 	console.log('/process/login 처리함');
@@ -53,7 +53,6 @@ router.route('/process/login').post(function(req, res) {
 	res.write('<div><p>Param password: ' + paramPassword + '</p></div>');
 	res.write('<a href="/loginConfirm.html">컨펌 페이지로 이동하기</a>')
 	res.end();
-
 });
 
 // 로그아웃 라우팅 함수 - 로그아웃 후 세션 삭제함
@@ -118,6 +117,7 @@ var errorHandler = expressErrorHandler({
 		'404' : './public/404.html'
 	}
 });
+
 app.use(expressErrorHandler.httpError(404));
 app.use(errorHandler);
 
