@@ -1,4 +1,5 @@
 
+
 // Express 기본 모듈 부르기
 var express = require('express')
 , http = require('http')
@@ -53,7 +54,10 @@ app.get('update', function(req, res){
 router.route('/process/update').post(function(req, res){
 	console.log('/process/update 처리함');
 
-
+	var user = new User()
+	user.password = req.body.password;
+	user.email = req.body.email;
+	
 	res.end();
 });
 
