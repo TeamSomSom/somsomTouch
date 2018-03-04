@@ -7,6 +7,47 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         $(document).ready(function () {
+            //웹서버포트로 connection
+            //var socket = io.connect('http://algo.dongduk.ac.kr:3389');
+
+            //  A   SIGN IN
+            // prompts and sets username, then sends it to server
+            signIn(1);
+
+            socket.on('name taken', function(){
+                signIn(2);
+            });
+
+            function signIn(attempt){
+                
+                if (attempt === 1){ 
+                    my_username = prompt("이름을 입력하시오.");
+                }
+                else {
+                    my_username = prompt('\"'+ my_username + '\"은 불가능합니다. \n 다른 이름을 입력하세요');
+                }
+                // TODO: limit username length to something reasonable (that won't break the display)
+                // TODO: limit character set to letters,numbers and spaces/underscore/dash/etc. But no '\'. 
+                
+                //  check that username is valid: /\S/ checks that there is at least one none blank character in the name provided
+                while (my_username === null || my_username === '' || !(/\S/.test(my_username)) ) {
+
+                    if ( !(/\S/.test(my_username)) ) {
+
+                        my_username = prompt("빈칸을 이름으로 할 수 없어요 \n 다시 이름을 입력해주세요");
+                    }
+                    else
+                    {
+                        my_username = prompt("이름 없이 접근할 수 없습니다.\n 다시 이름을 입력해주세요.");
+                    }
+                }
+                socket.emit('sign in', my_username);
+                $('#myName').empty();
+                $('#myName').append('<strong>'+my_username+'</strong> 님');
+                //$('#userTitle').append('Name : '+my_username);
+            }
+
+            //여기서부턴연지코드//
             function getRoomList() {
                 // Ajax를 수행합니다.
                 $.getJSON('/room?dummy='+(new Date()).getTime(), function (data) {
@@ -55,6 +96,9 @@
 </head>
 <body>
     <h1>Real Time Chatroom</h1>
+    <hr/>
+    <p class="name" id="myName"></p>
+    <hr/>
     <span>방 이름: </span>
     <input id="room" />
     <button>방 생성</button>
