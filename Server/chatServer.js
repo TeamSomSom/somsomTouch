@@ -7,9 +7,11 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+
 var ejs = require('ejs');
 
 app.set('view engine', 'ejs');
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
@@ -29,11 +31,14 @@ var expect = require('chai').expect,
     client = redis.createClient();
 //##end of redis connection
 
+
 app.use(express.static(__dirname));
 
 app.get('/',function(req, res){
     //res.sendFile(__dirname + '/client.html');
     fs.readFile('../public/lobby.html', 'utf-8', function(err, data){
+
+
         res.send(data.toString());
     });
 });
@@ -41,11 +46,13 @@ app.get('/',function(req, res){
 app.get('/chat/:room', function(req, res){
     console.log('req.params.room=%s', req.params.room);
 
+
     fs.readFile('../views/client.ejs','utf8',function(err, data){
         res.send(ejs.render(data,{
             room: req.params.room
         }));
     });
+    res.render('client.ejs',{room: req.params.room});
 });
 
 app.get('/room',function(req, res){
@@ -61,6 +68,8 @@ var count=1;
 var dir= {};
 var online_users = [];
 var MAX_PEERS = 6; //수정필요하당
+
+
 
 /*
 io.on(이벤트, 함수)
@@ -97,6 +106,7 @@ io.on('connection', function(socket){
     });
 });
 
+<<<<<<< HEAD
 // FUNCTIONS
 
 // 0 
@@ -249,6 +259,8 @@ function leadingZeros(n, digits) {
   return zero + n;
 }
 
+=======
+>>>>>>> rima
 http.listen(3030, function(){
     console.log('server is running at port number 3030');
 });
