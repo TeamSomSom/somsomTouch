@@ -111,21 +111,6 @@ router.route('/process/all').get(function(req, res) {
     res.end();
 });
 
-router.route('/process/random').get(function(req, res) {
-    console.log('/process/random 호출됨.');
-
-    var random = new Array();
-
-    for (var i=0; i <= random_num; i++) {
-        store.randomkey(function(err, obj) {
-            if (err) { throw err; }
-
-            random[i] = obj;
-            console.log(random[i]);
-        });
-    }
-});
-
 // 라우터 객체를 app 객체에 등록
 app.use('/', router);
 
