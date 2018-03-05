@@ -1,8 +1,6 @@
 
-
-/// User Controller ///
-
-/*** request를 계속계속 들고 다닐 방법이 없나....? ***/
+/**************************** User Controller ****************************/
+				/*** request를 계속계속 들고 다닐 방법이 없나....? ***/
 
 var expressSession = require('express-session'),
 	express = require('express'), 
@@ -16,7 +14,10 @@ app.use(expressSession({
 	saveUninitialized:true
 }));
 
-// LogIn
+/*********************************************************************** 
+ *                              User LogIn  						   
+*************************************************************************/
+
 exports.login = function(req, res){
     console.log('/process/login 처리함');
 
@@ -44,7 +45,10 @@ exports.login = function(req, res){
 	res.end();
 };
 
-// LogOut
+/*********************************************************************** 
+ *                              User LogOut  						   
+*************************************************************************/
+
 exports.logout = function(req, res) {
     console.log('/process/logout 호출됨')
 	
@@ -65,7 +69,10 @@ exports.logout = function(req, res) {
 	}
 };
 
-// Create User
+/*********************************************************************** 
+ *                              User Create  						   
+*************************************************************************/
+
 var store = redis.createClient();
 var cnt = 0;
 exports.create = function(req, res) {
@@ -81,7 +88,10 @@ exports.create = function(req, res) {
 	res.redirect('/');
 };
 
-// Update User
+/*********************************************************************** 
+ *                              User Update  						   
+*************************************************************************/
+
 exports.update = function(req, res){
 	console.log('/process/update 처리함');
 
@@ -91,3 +101,4 @@ exports.update = function(req, res){
 	
 	res.end();
 };
+
