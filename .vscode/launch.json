@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/Server/index.js" // 프로젝트가 시작되는 시점 일단 login으로 설정함
+            "program": "${workspaceFolder}/app.js" // 프로젝트가 시작되는 시점 일단 login으로 설정함
 
         }
     ]
