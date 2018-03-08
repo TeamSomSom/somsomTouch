@@ -13,7 +13,7 @@ var app = express();
  *                              User Create  						   
 *************************************************************************/
 
-var store = redis.createClient();
+var store = redis.createClient({host:'localhost', port: 6379});
 var cnt = 0;
 exports.create = function(req, res) {
 	console.log('/process/signup 처리함');
@@ -24,7 +24,7 @@ exports.create = function(req, res) {
 	
 	console.log('id: ' + paramId + ', password : ' + paramPassword + ', email: ' + paramEmail);
 	
-	store.hmset("user:"+(++cnt), "id", paramId, "pwd", paramPassword, "email", paramEmail);
+	store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail);
 	res.redirect('/');
 };
 
