@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+@font-face {
+	font-family: 'daylight';
+	src: url(../fonts/210daylight.ttf) format('truetype');
+}
+
+
+@font-face {
+	font-family: 'spring';
+	src: url(../fonts/HS봄바람체.ttf) format('truetype');
+}

@@ -108,3 +108,17 @@ body {
 .mastfoot {
   color: rgba(255, 255, 255, .5);
 }
+
+body {
+  background-image:url(../images/cover_image.png);
+  background-size:100%;
+  background-repeat:no-repeat;
+  background-color:#001d27;
+  background-attachment:fixed; 
+  background-position:center center;
+}
+
+#gogame {
+  margin-top:100px;
+  margin-left:29px
+}
