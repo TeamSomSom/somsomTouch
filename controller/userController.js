@@ -24,7 +24,7 @@ exports.create = function(req, res) {
 	
 	console.log('id: ' + paramId + ', password : ' + paramPassword + ', email: ' + paramEmail);
 	
-	store.hmset("user:"+(++cnt), "id", paramId, "pwd", paramPassword, "email", paramEmail);
+	store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail);
 	res.redirect('/');
 };
 
