@@ -16,12 +16,13 @@ exports.create = function(req, res) {
 
     var title = req.body.title;
     var content = req.body.content;
-    var category = req.body.category;
+    // var target = document.getElementById("notice_cate");
+    // var category = target.options[target.selectedIndex].text; //= req.body.category;
     var date = new Date().toISOString().substring(0, 10);
 
-    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category + ', date : ' + date);
-    store.hmset('notice:' + (++id), 'title', title, 'content', content, 'date', date, 'category', category);
-
+    console.log('title : ' + title + ', content : ' + content + ', date : ' + date); //+ ', category : ' + category +
+    store.hmset('notice:' + (++id), 'title', title, 'content', content, 'date', date);//, 'category', category);
+''
     res.redirect('../notice.html');
 };
 
@@ -53,12 +54,15 @@ exports.update = function(req, res){
 /*********************************************************************** 
  *                             Notice Delete					   
 *************************************************************************/
-
+// 안해봄
 exports.delete = function(req, res){
     console.log('/process/delete 처리함');
 
+    var userId = req.body.userId;
 
+    store.del(userId);
 
+    res.redirect('../notice.html');
 };
 
 
