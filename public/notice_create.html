@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>notice</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<style>
+
+</style>
+<body>
+<div class="container">
+    <h4>글작성 form</h4>
+
+    <form name="form" method="POST" action="/notice/create">
+        <p>제목</p>
+        <input type="text" class="form-control" name="title" placeholder="제목" required>
+
+        <p>내용</p>
+        <textarea name="content" class="form-control" placeholder="내용을 입력해주세요" rows="3" required></textarea>
+            
+        <p>분류</p>
+        <input type="text" class="form-control" name="category" placeholder="분류" required></textarea>
+    
+        <button type="submit">제출</button>
+    </form>
+
+</div>
+</body>
+</html>

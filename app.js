@@ -23,6 +23,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.use('/', require('./routes/user'));
+app.use('/notice', require('./routes/notice'));
 
 // routing
 var router = express.Router();
