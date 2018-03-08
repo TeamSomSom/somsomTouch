@@ -1,4 +1,4 @@
-﻿// Express 기본 모듈 불러오기
+// Express 기본 모듈 불러오기
 var express = require('express')
     , http = require('http')
     , path = require('path');
@@ -41,123 +41,75 @@ app.use(static(path.join(__dirname, 'public')));
 // 라우터 객체 참조
 var router = express.Router();
 
-// 로그인할 때 사용자가 접속 중임을 나타내는 키(online)에 아이디 추가
-router.route('/process/login-online').post(function(req, res) {
-    console.log('/process/login-online 호출됨.');
+var cnt = 0;
+router.route('/process/setname').post(function(req, res) {
+    console.log('/process/setname 호출됨.');
 
-    var userId = req.body.id || req.query.id; 
-    console.log('userId - ' + userId + '추가');
+    var paramId = req.body.id || req.query.id;
+    var paramPassword = req.body.password || req.query.password;
 
-    store.sadd('online', userId, function(err, obj) {
-        if (err) { throw err; }
+    store.hmset("user:"+(++cnt), "id", paramId, "pwd", paramPassword, redis.print);
+    console.log('redis에 사용자를 등록했습니다. : ' + paramId + ' -> ' + paramPassword);
     
-        if (obj > 0) {
-            console.log(userId + ' online 되었습니다.');
+    res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+    res.write('<h1>서버에서 응답한 결과입니다.</h1>');
+    res.write('<div><p>redis에 사용자를 등록했습니다. : ' + paramId + ' -> ' + paramPassword + '</p></div>');
+    res.write("'<br><Br><a href='/setname.html'>처음으로 돌아가기</a>");
+    res.write("'<br><br><a href='/process/all'>전체 사용자 보기</a>");
+    res.end();
+});
+
+router.route('/process/getname').post(function(req, res) {
+    console.log('/process/getname 호출됨.');
+
+    var paramId = req.body.id || req.query.id;
+
+    store.hget("user", paramId, function(err, username) {
+        if (err) { throw err; }
+
+        if (username) {
+            console.log('redis에 사용자를 찾았습니다. : ' + paramId + ' -> ' + username);
+    
+            res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+            res.write('<h1>서버에서 응답한 결과입니다.</h1>');
+            res.write('<div><p>redis에 사용자를 찾았습니다. : ' + paramId + ' -> ' + username + '</p></div>');
+            res.write("'<br><Br><a href='/getname.html'>처음으로 돌아가기</a>")
+            res.end();
         } else {
-            console.log('실패')
+            res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+            res.write('<h1>서버에서 응답한 결과입니다.</h1>');
+            res.write('<div><p>redis에 사용자를 찾지 못했습니다. : ' + paramId + '</p></div>');
+            res.write("'<br><Br><a href='/getname.html'>처음으로 돌아가기</a>")
+            res.end();
         }
     });
+    
 });
 
-// 로그아웃할 때 사용자가 접속 중임을 나타내는 키(online)에 아이디 삭제
-router.route('/process/logout-offline').post(function(req, res) {
-    console.log('/process/logout-offline 호출됨.');
+router.route('/process/all').get(function(req, res) {
+    console.log('/process/all 호출됨.');
 
-    var userId = req.body.id || req.query.id; 
-    console.log('userId - ' + userId + '삭제');
+    for (var i=1; i <= cnt; i++) {
+        store.hgetall("user:"+i, function(err, obj) {
+            if (err) { throw err; }
 
-    store.srem('online', userId, function(err, obj) {
-        if (err) { throw err; }
+            console.log(obj);
+            // var items = [];
+            // for (j in obj) {
+                // var x = JSON.parse(res[i]);
 
-        if (obj > 0) {
-            console.log(userId + ' offline 되었습니다.');
-        } else {
-            console.log('삭제 실패')
-        }
-    });
+                // console.log("id : " + obj.id);
+                // console.log("pwd : " + obj.pwd);
+
+                // items.push(x);
+            // }    
+        });
+    }
+
+    res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+    res.write('<h1>서버에서 응답한 전체 사용자 결과입니다.</h1>');
+    res.end();
 });
-
-var num = 4; // 랜덤매칭하고자 하는 사람 수
-router.route('/process/random2').get(function(req, res) {
-    console.log('/process/random2 호출됨.');
-
-    var online_length; // 온라인인 유저 카운트
-    var arr = new Array(); // 온라인인 유저들의 배열
-    var randomNumArr = new Array(); // 랜덤 숫자 배열
-
-    // var playAlert = setInterval(function() {
-    //     console.log('abc');
-    // }, 3000);
-    
-    store.smembers('online', function(err, obj) {
-        if (err) { throw err; }
-
-        arr = obj;
-        online_length = obj.length;
-
-        console.log('온라인 유저 수 : ' + online_length);
-        console.log('온라인 유저 - ' + arr);
-
-        if (num > online_length) {
-            console.log('조건문 진입');
-    
-            var waitAlert = setInterval(function() {
-                console.log('...다른 사용자를 기다리는 중입니다...');
-
-                store.smembers('online', function(err2, obj2) {
-                    if (err2) { throw err2; }
-
-                    arr = obj2;
-                    online_length = obj2.length;
-
-                    console.log('온라인 유저 수 : ' + online_length);
-                    console.log('온라인 유저 - ' + arr);
-
-                    if (num <= online_length) {
-                        clearInterval(waitAlert);
-                        res.redirect('/process/random2')
-                    }
-                });
-            }, 3000);      
-        } else {
-            for (var i = 0; i < num; i++) {
-                randomNumArr[i] = Math.floor(Math.random() * online_length);  // 0 ~ online_length-1
-                
-                for (var j = 0; j < i; j++) { // 이미 뽑힌 사람들인지 중복체크
-                    if (randomNumArr[i] == randomNumArr[j]) {
-                        i = i - 1;
-                        break;
-                    }
-                }
-            }
-            
-            console.log('랜덤 index : ' + randomNumArr);
-        
-            var randomUser;
-            for (var i = 0; i < num; i++) {
-                randomUser = arr[randomNumArr[i]];
-                console.log(randomUser);
-
-                // 매칭된 유저는 online 키에서 삭제
-                // 게임 끝나면 다시 추가하기!
-                store.srem('online', randomUser, function(err, obj) {
-                    if (err) { throw err; }
-            
-                    if (obj > 0) {
-                        console.log('offline 되었습니다.');
-                    } else {
-                        console.log('삭제 실패')
-                    }
-                });
-            }
-       }
-    });
-    
-    // 제약조건
-    // 1. 이미 랜덤 매칭된 유저는 어떻게 제외..? 채팅방 만들 때 온라인 키에서 지워야되나,,O 게임끝나면 다시 추가하고
-    // 2. 매칭할 수 있는 유저가 없을 때(짝수가 안맞을때) 매칭 안된다/는 메세지 출력 O
-});
-
 
 // 라우터 객체를 app 객체에 등록
 app.use('/', router);
