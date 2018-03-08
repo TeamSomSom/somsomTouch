@@ -13,7 +13,7 @@ var app = express();
  *                              User Create  						   
 *************************************************************************/
 
-var store = redis.createClient();
+var store = redis.createClient({host:'localhost', port: 6379});
 var cnt = 0;
 exports.create = function(req, res) {
 	console.log('/process/signup 처리함');
