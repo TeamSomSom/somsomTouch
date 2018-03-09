@@ -106,7 +106,6 @@ io.on('connection', function(socket){
     });
 });
 
-<<<<<<< HEAD
 // FUNCTIONS
 
 // 0 
@@ -259,8 +258,6 @@ function leadingZeros(n, digits) {
   return zero + n;
 }
 
-=======
->>>>>>> rima
 http.listen(3030, function(){
     console.log('server is running at port number 3030');
 });
