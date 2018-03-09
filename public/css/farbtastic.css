@@ -1,6 +1,10 @@
 /**
  * Farbtastic Color Picker 1.2
+<<<<<<< HEAD
  * © 2008 Steven Wittens
+=======
+ * Â© 2008 Steven Wittens
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +20,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
+<<<<<<< HEAD
 .farbtastic {
   position: relative;
 }
@@ -49,3 +54,39 @@
   background: url(../images/marker.png) no-repeat;
 }
 
+=======
+ .farbtastic {
+    position: relative;
+  }
+  .farbtastic * {
+    position: absolute;
+    cursor: crosshair;
+  }
+  .farbtastic, .farbtastic .wheel {
+    width: 195px;
+    height: 195px;
+  }
+  .farbtastic .color, .farbtastic .overlay {
+    top: 47px;
+    left: 47px;
+    width: 101px;
+    height: 101px;
+  }
+  .farbtastic .wheel {
+    background: url(../img/wheel.png) no-repeat;
+    width: 195px;
+    height: 195px;
+  }
+  .farbtastic .overlay {
+    background: url(../img/mask.png) no-repeat;
+  }
+  .farbtastic .marker {
+    width: 17px;
+    height: 17px;
+    margin: -8px 0 0 -8px;
+    overflow: hidden; 
+    background: url(../img/marker.png) no-repeat;
+  }
+  
+  
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412

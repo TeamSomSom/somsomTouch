@@ -5,15 +5,27 @@
         <script src="//code.jquery.com/jquery-1.12.4.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script>
+<<<<<<< HEAD
             $(document).ready(function () {
                 $.getJSON('/room', function (data) {
                     $.each(data, function (index, item) {
                         $('<button></button>').attr({
                             'data-room': item
+=======
+            $(document).ready(function() {
+                //Ajax를 수행 - Ajax를 사용해 방과 관련된 정보를 가져온다.
+                $.getJSON('/room', function(data) {
+                    //반복을 수행
+                    $.each(data, function(index, item) {
+                        //문서 객체를 추가
+                        $('<button></button>').attr({
+                            'data-room':item
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412
                         }).text('Room Name: ' + item).appendTo('#container');
                     });
                 });
 
+<<<<<<< HEAD
                 var socket = io.connect();
                 socket.on('create_room', function (data) {
                     $('<button></button>').attr({
@@ -29,6 +41,38 @@
                 $('body > button').click(function () {
                     var room = $('#room').val();
                     socket.emit('create_room', room);
+=======
+                //Socket 처리를 수행
+                var socket = io.connect();
+                //create_room 이벤트는 다른 사용자가 방을 생성했을 때 발생
+                socket.on('create_room', function(data) {
+                    //문서 객체를 추가
+                    $('<button></button>').attr({
+                        'data-room':data
+                    }).text('Room Number: ' + data).appendTo('#container');
+                });
+
+                //방 접속 이벤트 연결
+                //버튼을 클릭하면 data-room속성에 저장한 방으로 강제 이동한다.
+                $('#container').on('click', 'button', function() {
+                    //변수 선언
+                    var room = $(this).attr('data-room');
+                    console.log(room);
+                    //페이지 이동
+                    location = '/canvas/' + room;
+                });
+                
+                //방 생성 버튼 이벤트 연결
+                //화면의 CREATE ROOM 버튼을 누르면 페이지 강제이동
+                $('body > button').click(function() {
+                    //변수 선언
+                    var room = $('#room').val();
+
+                    //소켓 이벤트 발생
+                    socket.emit('create_room', room);
+
+                    //페이지 이동
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412
                     location = '/canvas/' + room;
                 });
             });

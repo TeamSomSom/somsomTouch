@@ -9,6 +9,11 @@
 
         <!--생성자 함수를 선언할 스크립트-->
         <script>
+<<<<<<< HEAD
+=======
+            //Point 생성자 함수를 생성
+            //이벤트 객체와 이벤트 발생 객체를 매개변수로 넣는다 -> 부모 문서 객체를 기준으로 마우스X좌표와 Y좌표를 얻을 수 있음
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412
             function Point(event, target) {
                 this.x = event.pageX - $(target).position().left;
                 this.y = event.pageY - $(target).position().top;
@@ -17,6 +22,7 @@
 
         <!--프로그램 처리와 관련된 코드를 작성할 스크립트-->
         <script>
+<<<<<<< HEAD
             $(document).ready(function () {
                 var canvas = document.getElementById('canvas');
                 var context = canvas.getContext('2d');
@@ -33,15 +39,48 @@
                 });
 
                 canvas.addEventListener('mousedown', function (event) {
+=======
+            $(document).ready(function() {
+                //canvas 객체 추출
+                var canvas = document.getElementById('canvas');
+                var context = canvas.getContext('2d');
+
+                //변수 선언
+                var width = 5;
+                var opacity = 1.0;
+                var pressure = 1.0;
+                var color = '#000000'
+                var isDown = false;
+                var newPoint, oldPoint;
+
+                //UI 구성
+                //색상 선택 이벤트 - 색상을 선택했을 때 color 변수에 색상을 넣는다.
+                $('#colorpicker').farbtastic(function(data) {
+                    color = data;
+                });
+
+                //캔버스 생성 및 이벤트 연결
+                //이벤트 연결
+                canvas.addEventListener('mousedown', function(event) {
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412
                     isDown = true;
                     oldPoint = new Point(event, this);
                 });
 
+<<<<<<< HEAD
                 canvas.addEventListener('mouseup', function () {
                     isDown = false;
                 });
 
                 canvas.addEventListener('mousemove', function (event) {
+=======
+                canvas.addEventListener('mouseup', function() {
+                    isDown = false;
+                });
+
+                //마우스 좌표를 기록하고 서버로 전달
+                canvas.addEventListener('mousemove', function(event) {
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412
                     if(isDown) {
                         newPoint = new Point(event, this);
                         socket.emit('draw', {
@@ -56,6 +95,7 @@
                     }
                 });
 
+<<<<<<< HEAD
                 $("#sliderA").change(function () {
                     width = $(this).val();
                 });
@@ -67,6 +107,20 @@
                 var socket = io.connect();
                 socket.emit('join', '<%= room %>');
                 socket.on('line', function (data) {
+=======
+                $('#sliderA'.change(function() {
+                    width = $(this).val();
+                }));
+
+                $('#sliderB').change(function() {
+                    opacity = $(this).val() / 100;
+                });
+
+                //소켓 이벤트 연결
+                var socket = io.connect();
+                socket.emit('join', '<%= room %>');
+                socket.on('line', function(data) {
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412
                     context.lineWidth = data.width;
                     context.strokeStyle = data.color;
                     context.globalAlpha = opacity * pressure;
@@ -77,8 +131,11 @@
                 });
             });
         </script>
+<<<<<<< HEAD
         <script>
         </script>
+=======
+>>>>>>> fc7f3359339c79a30e00b91d2bded4cd0f56b412
     </head>
     <body>
         <table border="10">
