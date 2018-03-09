@@ -35,41 +35,58 @@ var store = redis.createClient();
  *                              User LogIn 						   
 *************************************************************************/
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function(username, done) {
-	console.log('serialize, username: ' + username);
+	// console.log('serialize, username: ' + username);
     done(null, username);
 });
 
 passport.deserializeUser(function(username, done) {
-	console.log('deserialize, username: ' + username);
+	// console.log('deserialize, username: ' + username);
     var ckPwd = store.hmget('user:'+ username, 'pwd', function(err, obj) {
 		if(obj !== '') return done(null, username);
 	}); 
 });
 
+var bkfd2Password = require("pbkdf2-password");
+var hasher = bkfd2Password();
+var assert = require('assert');
+
 passport.use(new LocalStrategy(
+
 	function(username, password, done) {
 		var uname = username;
-        var upwd = password;
-        var ckPwd = store.hmget('user:'+ uname, 'pwd', function(err, obj) {
-	 		console.log('username: ' + uname +' ,password: ' + upwd + ', dbPassword: ' + obj);
-			
-			if(obj=='') {    // ID 가 존재 하지 않을 경우 
-				console.log("Id 없음");
-				return done(null, false);
-	        } else {
-	            if(obj != upwd){    // Password 불일치 
-					console.log('비밀번호 불일치');
-	                return done(null, false);
-	            } else {
-					console.log("로그인 성공");
-	                return done(null, username);
-	            }
-			}
-		});
+
+        store.hgetall('user:'+ username, function(err, results) {
+            if(results==null){
+                // console.log('id 없음 ');
+                return done(null, false);
+            } else{
+                // console.log('id 있음 ');
+
+                var user = {
+                    username:username,
+                    salt:results.salt,
+                    pwd:results.pwd,
+                    email:results.email,
+				};
+				// console.log('username: ' + user.username + ' salt : ' + user.salt + ' pwd: '+ user.pwd +' email: ' +user.email);
+
+				// upwd 암호화하고 비밀번호 체크
+				hasher({password:password, salt:user.salt}, function(err, pass, salt, hash) {
+					if(hash === user.pwd){
+						console.log("로그인 성공");
+	                    return done(null, user.username);
+					} else {
+						console.log('비밀번호 불일치');
+						return done(null, false);
+					}
+				});
+            }
+        });
 	}
 ));
 
