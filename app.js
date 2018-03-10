@@ -2,27 +2,35 @@
 var express = require('express')
 , http = require('http')
 , path = require('path')
+, session = require('express-session')
 , bodyParser = require('body-parser')
 , static = require('serve-static')
 , expressErrorHandler = require('express-error-handler')
 , cookieParser = require('cookie-parser')
-, expressSession = require('express-session')
 , redis = require('redis')
 , passport = require('passport')
-, LocalStrategy = require('passport-local').Strategy;
+, LocalStrategy = require('passport-local').Strategy
+, flash = require('connect-flash')
+var RedisStore = require('connect-redis')(session);
 
 // Express 객체 생성 
 var app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(cookieParser());
-app.use(expressSession({
-    secret:'my key',
-    resave: true,
-    saveUninitialized:true
+app.use(session({
+	secret: 'dfwfqfyqf2kfh@kdfowh!1',
+	resave: false,
+	saveUninitialized: true,
+	store: new RedisStore()
 }));
+
 app.use(bodyParser.urlencoded({extended: false})); 
 app.use(bodyParser.json());
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static('public'));
+
 app.use('/', require('./routes/user'));
 app.use('/notice', require('./routes/notice'));
 
@@ -36,19 +44,26 @@ var store = redis.createClient();
 *************************************************************************/
 
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser(function(username, done) {
-	// console.log('serialize, username: ' + username);
-    done(null, username);
+passport.serializeUser(function(user, done) {
+	// console.log('serialize, username: ' + user.username);
+    done(null, user.username);
 });
 
-passport.deserializeUser(function(username, done) {
+passport.deserializeUser(function(id, done) {
 	// console.log('deserialize, username: ' + username);
-    var ckPwd = store.hmget('user:'+ username, 'pwd', function(err, obj) {
-		if(obj !== '') return done(null, username);
-	}); 
+
+	store.hgetall('user:'+ id, function(err, results) {
+		if(results !=null){
+			var user = {
+				username:id,
+				salt:results.salt,
+				pwd:results.pwd,
+				email:results.email,
+			};
+			return done(null, user);
+		}
+	});
+
 });
 
 var bkfd2Password = require("pbkdf2-password");
@@ -79,7 +94,7 @@ passport.use(new LocalStrategy(
 				hasher({password:password, salt:user.salt}, function(err, pass, salt, hash) {
 					if(hash === user.pwd){
 						console.log("로그인 성공");
-	                    return done(null, user.username);
+	                    return done(null, user);
 					} else {
 						console.log('비밀번호 불일치');
 						return done(null, false);
@@ -95,11 +110,12 @@ app.post(
 	passport.authenticate(
 	'local', 
 	{ 
-		successRedirect: '/welcome',
+		successRedirect: '/',
         failureRedirect: '/',
-		failureFlash: true 
-	}
-));
+		failureFlash: true
+	})
+	
+);
 
 /*********************************************************************** 
  *                              User LogOut 						   
@@ -108,12 +124,33 @@ app.post(
 app.get('/user/logout', function(req, res){
 	console.log('로그아웃');
 	req.logout();
-	res.redirect('/');
+	req.session.save(function(){
+		res.redirect('/');
+	})
 });
 
 app.get('/welcome', function(req, res){
-	res.redirect('/');
+	// console.log('session: ' + req.user.username ); //req.session.displayName 으로 더이상 세션 확인 안함
+	res.redirect('/mypage.html')
 });
+
+/*********************************************************************** 
+ *                              User Mypage  						   
+*************************************************************************/
+
+var isAuthenticated = function (req, res, next) {
+	if (req.isAuthenticated())
+	  return next();
+	res.redirect('/');
+};
+
+app.get('/mypage', isAuthenticated, function (req, res) {
+	// res.render('mypage',{
+	//   title: 'My Page',
+	//   user_info: req.user
+	// })
+	res.redirect('/mypage.html');
+  });
 
 /*********************************************************************** 
  *	                        	Error Handler
