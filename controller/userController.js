@@ -54,7 +54,7 @@ exports.update = function(req, res){
 
 // 이메일을 이용해서 ID 찾기 
 exports.findID = function(req, res){
-	
+	store.hgetall('user')
 };
 
 /*********************************************************************** 

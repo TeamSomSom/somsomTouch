@@ -16,13 +16,11 @@ exports.create = function(req, res) {
 
     var title = req.body.title;
     var content = req.body.content;
-    // var target = document.getElementById("notice_cate");
-    // var category = target.options[target.selectedIndex].text; //= req.body.category;
     var date = new Date().toISOString().substring(0, 10);
+    var category = req.body.notice_cate;
 
-    console.log('title : ' + title + ', content : ' + content + ', date : ' + date); //+ ', category : ' + category +
-    store.hmset('notice:' + (++id), 'title', title, 'content', content, 'date', date);//, 'category', category);
-''
+    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + 'category: ' + cat);
+    store.hmset('notice:' + (++id), 'title', title, 'content', content, 'date', date, 'category', category);
     res.redirect('../notice.html');
 };
 
@@ -32,9 +30,7 @@ exports.create = function(req, res) {
 *************************************************************************/
 
 exports.read = function(req, res){
-    console.log('/process/read 처리함');
-
-
+    console.log('/notice/read 처리함');
 
 };
 
@@ -44,9 +40,7 @@ exports.read = function(req, res){
 *************************************************************************/
 
 exports.update = function(req, res){
-    console.log('/process/update 처리함');
-
-
+    console.log('/notice/update 처리함');
 
 };
 
@@ -54,18 +48,15 @@ exports.update = function(req, res){
 /*********************************************************************** 
  *                             Notice Delete					   
 *************************************************************************/
-// 안해봄
+
+// 자기가 쓴 글 만 지울 수 있도록 
 exports.delete = function(req, res){
-    console.log('/process/delete 처리함');
+    console.log('/notice/delete 처리함');
+    var userId = req.user.username;
+    var postId = req.body.postId;
 
-    var userId = req.body.userId;
-
-    store.del(userId);
-
-    res.redirect('../notice.html');
+    store.del('notice:'+ postId, function(req, res){
+        res.redirect('../notice.html');
+    });
 };
-
-
-
-
 
