@@ -5,7 +5,6 @@ var express = require('express'),
 
 var store = redis.createClient();
 
-
 /*********************************************************************** 
  *                             Notice Create					   
 *************************************************************************/
@@ -19,6 +18,7 @@ exports.create = function(req, res) {
 <<<<<<< Updated upstream
     var category = req.body.category;
     var date = new Date().toISOString().substring(0, 10);
+<<<<<<< Updated upstream
 
     console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category + ', date : ' + date);
     store.hmset('notice:' + (++id), 'title', title, 'content', content, 'date', date, 'category', category);
@@ -28,6 +28,12 @@ exports.create = function(req, res) {
     var date = new Date().toISOString().substring(0, 10);
 
     console.log('title : ' + title + ', content : ' + content + ', date : ' + date+ ', category: ' + category); //+ ', category : ' + category +
+=======
+    var category = req.body.category;
+    var date = new Date().toISOString().substring(0, 10);
+
+    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category + ', date : ' + date);
+>>>>>>> Stashed changes
     store.hmset('notice:' + (++id), 'title', title, 'content', content, 'date', date, 'category', category);
 >>>>>>> Stashed changes
     res.redirect('../notice.html');
@@ -39,7 +45,9 @@ exports.create = function(req, res) {
 *************************************************************************/
 
 exports.read = function(req, res){
-    console.log('/notice/read 처리함');
+    console.log('/process/read 처리함');
+
+
 
 };
 
@@ -49,7 +57,9 @@ exports.read = function(req, res){
 *************************************************************************/
 
 exports.update = function(req, res){
-    console.log('/notice/update 처리함');
+    console.log('/process/update 처리함');
+
+
 
 };
 
@@ -81,4 +91,7 @@ exports.delete = function(req, res){
         res.redirect('../notice.html');
     });
 };
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
