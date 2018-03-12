@@ -3,8 +3,7 @@
 var express = require('express'), 
     redis = require('redis');
 
-var store = redis.createClient();
-
+var store = redis.createClient({host:'localhost', port: 6379});
 /*********************************************************************** 
  *                             Notice Create					   
 *************************************************************************/
@@ -12,39 +11,59 @@ var store = redis.createClient();
 var id = 0;
 exports.create = function(req, res) {
     console.log('/notice/create 호출됨.');
+    
+    var notice = {
+        id: ++id,
+        title: req.body.title,
+        content: req.body.content,
+        category: req.body.notice_cate,
+        date:new Date().toISOString().substring(0, 10)
+    };
 
-    var title = req.body.title;
-    var content = req.body.content;
-    var category = req.body.notice_cate;
-    var date = new Date().toISOString().substring(0, 10);
-
-    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category + ', date : ' + date);
-    store.hmset('notice:' + (++id), 'title', title, 'content', content, 'date', date, 'category', category);
-
-    res.redirect('../notice.html');
+    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
+    store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
+    res.redirect('/notice.html');
 };
-
 
 /*********************************************************************** 
  *                             Notice Read					   
 *************************************************************************/
 
 exports.read = function(req, res){
-    console.log('/process/read 처리함');
+    console.log('/notice/read 처리함');
+    var id = req.body.noticeId;
 
-
-
+    store.hgetall('notice:'+ id, function(err, results) {
+		if(results !=null){
+			var notice = {
+                id: id,
+                title: results.title,
+                content: results.content,
+                category: results.category,
+                date: new Date().toISOString().substring(0, 10)
+            };
+		}
+    });
+    console.log('Notice Read= id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + date + 'category: ' + category);
 };
-
 
 /*********************************************************************** 
  *                             Notice Update					   
 *************************************************************************/
 
 exports.update = function(req, res){
-    console.log('/process/update 처리함');
+    console.log('/notice/update 처리함');
 
+    var notice = {
+        id: ++id,
+        title: req.body.title,
+        content: req.body.content,
+        category: req.body.notice_cate,
+        date:new Date().toISOString().substring(0, 10)
+    };
 
+    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
+    store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
 
 };
 
@@ -53,7 +72,7 @@ exports.update = function(req, res){
  *                             Notice Delete					   
 *************************************************************************/
 
-// 자기가 쓴 글 만 지울 수 있도록 
+// 자기가 쓴 글 만 지울 수 있도록 -> 생각해보니까 공지글이니까..관리자만 권한 주면 될 것 같음
 exports.delete = function(req, res){
     console.log('/notice/delete 처리함');
     var userId = req.user.username;

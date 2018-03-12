@@ -36,7 +36,7 @@ app.use('/notice', require('./routes/notice'));
 
 // routing
 var router = express.Router();
-var store = redis.createClient();
+var store = redis.createClient({host:'localhost', port: 6379});
 
 
 /*********************************************************************** 
