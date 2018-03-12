@@ -35,20 +35,24 @@ exports.create = function(req, res) {
 exports.read = function(req, res){
     console.log('/notice/read 처리함');
 
-    // var id = req.body.noticeId;
-    var id = 1;
-    store.hgetall('notice:'+ id, function(err, results) {
-		if(results !=null){
-			var notice = {
-                id: id,
-                title: results.title,
-                content: results.content,
-                category: results.category,
-                date: new Date().toISOString().substring(0, 10)
-            };
-        }
-        console.log('Notice Read= id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + notice.date + ', category: ' + notice.category);
-        res.render('notice', {notice:notice});
+    var notices = [];
+    store.keys('notice:*', function(err, results){
+        results.forEach(function(key){
+            store.hgetall(key, function(err, result) {
+                console.log(key);
+
+                var notice = {
+                    id: key,
+                    title: result.title,
+                    content: result.content,
+                    category: result.category,
+                    date: result.date
+                };
+                notices += notice;
+                console.log('id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + notice.date + ', category: ' + notice.category);
+            });
+        });
+        res.render('notice', {notices:notices});
     });
 };
 
