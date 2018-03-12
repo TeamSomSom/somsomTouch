@@ -101,10 +101,11 @@ passport.use(new LocalStrategy(
                     username:username,
                     salt:results.salt,
                     pwd:results.pwd,
-                    email:results.email,
+					email:results.email,
+					winRate: results.winRate
 				};
-				console.log('username: ' + user.username + ' salt : ' + user.salt + ' pwd: '+ user.pwd +' email: ' +user.email);
 
+				console.log('username: ' + user.username + ' salt : ' + user.salt + ' pwd: '+ user.pwd +' email: ' +user.email, ' winRate: ' + user.winRate);
 				// upwd 암호화하고 비밀번호 체크
 				hasher({password:password, salt:user.salt}, function(err, pass, salt, hash) {
 					if(hash === user.pwd){
@@ -143,11 +144,6 @@ app.get('/user/logout', function(req, res){
 	})
 });
 
-app.get('/welcome', function(req, res){
-	// console.log('session: ' + req.user.username ); //req.session.displayName 으로 더이상 세션 확인 안함
-	res.redirect('/mypage.html')
-});
-
 /*********************************************************************** 
  *                              User Mypage  						   
 *************************************************************************/
@@ -159,11 +155,19 @@ var isAuthenticated = function (req, res, next) {
 };
 
 app.get('/mypage', isAuthenticated, function (req, res) {
-	// res.render('mypage',{
-	//   title: 'My Page',
-	//   user_info: req.user
-	// })
-	res.redirect('/mypage.html');
+	store.hgetall('user:'+ req.user.username, function(err, results) {
+		if(results !=null){
+			var user = {
+				username:req.user.username,
+				salt:results.salt,
+				pwd:results.pwd,
+				email:results.email,
+				winRate: results.winRate
+			};
+        }
+        console.log('User: ' + user.username + ' salt : ' + user.salt + ' pwd: '+ user.pwd +' email: ' +user.email, ' winRate: ' + user.winRate);
+        res.render('mypage', {user: user});
+    });
   });
 
 /*********************************************************************** 

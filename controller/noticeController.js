@@ -52,7 +52,7 @@ exports.read = function(req, res){
             };
         }
         console.log('Notice Read= id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + notice.date + ', category: ' + notice.category);
-        res.render('notice');
+        res.render('notice', {notice:notice});
     });
 };
 
