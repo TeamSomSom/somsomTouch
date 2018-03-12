@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Chat예제</title>
+        <style>
+            .chat_log{ width: 95%; height: 200px;}
+            .name{ width: 10%; }
+            .message{ width: 70%; }
+            .chat{ width: 10%; }
+        </style>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
+        <script src="/socket.io/socket.io.js"></script>
+
+        <!--생성자 함수를 선언할 스크립트-->
+        <link rel="stylesheet" type="text/html" href="../public/css/farbtastic.css"/>
+        <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script>
+        //이거붙인거임
+            function Point(event, target) {
+                this.x = event.pageX - $(target).position().left;
+                this.y = event.pageY - $(target).position().top;
+            }
+        </script>
+        <script>
+            $(document).ready(function(){
+                //소켓을 생성한다.
+                var socket= io.connect();
+                var roomName = '<%=room %>';
+                socket.emit('join', roomName);
+
+                //submit버튼 클릭시 메세지를 보낸다
+                $('#chat').on('submit', function(e){
+                    var msgobj = {
+                        rndata: roomName,
+                        name: $('#name').val(),
+                        message: $('#message').val(),
+                        date: new Date().toUTCString()
+                    };
+                    socket.emit('send message', msgobj);
+                    $('#message').val('');
+                    $('#message').focus();
+                    e.preventDefault();
+                });
+
+                //receive message가 발생시 추가한다.
+                socket.on('receive message', function(msg){
+                    $('#chatLog').append(msg+'\n');
+                    $('#chatLog').scrollTop($('#chatLog')[0].scrollHeight);
+                });
+
+                socket.on('change name', function(name){
+                    $('#name').val(name);
+                });
+
+                //붙임
+                var canvas = document.getElementById('canvas');
+                var context = canvas.getContext('2d');
+
+                var width = 5;
+                var opacity = 1.0;
+                var pressure = 1.0;
+                var color = '#000000';
+                var isDown = false;
+                var newPoint, oldPoint;
+
+               
+
+                canvas.addEventListener('mousedown', function (event) {
+                    isDown = true;
+                    oldPoint = new Point(event, this);
+                });
+
+                canvas.addEventListener('mouseup', function () {
+                    isDown = false;
+                });
+
+                canvas.addEventListener('mousemove', function (event) {
+                    if(isDown) {
+                        newPoint = new Point(event, this);
+                        socket.emit('draw', {
+                            width: width,
+                            color: color,
+                            x1: oldPoint.x,
+                            y1: oldPoint.y,
+                            x2: newPoint.x,
+                            y2: newPoint.y
+                        });
+                        oldPoint = newPoint;
+                    }
+                });
+
+                $("#sliderA").change(function () {
+                    width = $(this).val();
+                });
+
+                $("#sliderB").change(function () {
+                    opacity = $(this).val() / 100;
+                });
+
+                socket.on('line', function (data) {
+                    context.lineWidth = data.width;
+                    context.strokeStyle = data.color;
+                    context.globalAlpha = opacity * pressure;
+                    context.beginPath();
+                    context.moveTo(data.x1, data.y1);
+                    context.lineTo(data.x2, data.y2);
+                    context.stroke();
+                });
+
+                //끝남
+            });
+           
+        </script>
+    </head>
+    <body>
+        <div>
+            <!--캔버스시작-->
+            <table border="10">
+                <tr>
+                    <td rowspan="3">
+                        <!--캔버스-->
+                        <canvas id="canvas" width="1200" height="800"></canvas>
+                    </td>
+                    <td height="200">
+                        <!--색상선택기-->
+                        <div id="colorpicker"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="25">
+                        <!--슬라이더: 두께 선택-->
+                        <input id="sliderA" type="range" min="0" max="20" value="5"/><br/>
+                        <!--슬라이더: 투명도 선택-->
+                        <input id="sliderB" type="range" min="0" max="100"/><br/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background: orange;"></td>
+                </tr>
+            </table>
+            <!--캔버스끝-->
+            <!--캔버스시작-->
+            <textarea id="chatLog" class="chat_log" readonly></textarea>
+        </div>
+        <form id="chat">
+            <input id="name" class="name" type="text" readonly>
+            <input id="message" class="message" type="text">
+            <input type="submit" class="chat" value="chat"/>
+        </form>
+    </body>
+</html>
