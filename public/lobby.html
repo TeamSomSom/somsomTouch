@@ -9,44 +9,6 @@
         $(document).ready(function () {
             //웹서버포트로 connection
             //var socket = io.connect('http://algo.dongduk.ac.kr:3389');
-
-            //  A   SIGN IN
-            // prompts and sets username, then sends it to server
-            signIn(1);
-
-            socket.on('name taken', function(){
-                signIn(2);
-            });
-
-            function signIn(attempt){
-                
-                if (attempt === 1){ 
-                    my_username = prompt("이름을 입력하시오.");
-                }
-                else {
-                    my_username = prompt('\"'+ my_username + '\"은 불가능합니다. \n 다른 이름을 입력하세요');
-                }
-                // TODO: limit username length to something reasonable (that won't break the display)
-                // TODO: limit character set to letters,numbers and spaces/underscore/dash/etc. But no '\'. 
-                
-                //  check that username is valid: /\S/ checks that there is at least one none blank character in the name provided
-                while (my_username === null || my_username === '' || !(/\S/.test(my_username)) ) {
-
-                    if ( !(/\S/.test(my_username)) ) {
-
-                        my_username = prompt("빈칸을 이름으로 할 수 없어요 \n 다시 이름을 입력해주세요");
-                    }
-                    else
-                    {
-                        my_username = prompt("이름 없이 접근할 수 없습니다.\n 다시 이름을 입력해주세요.");
-                    }
-                }
-                socket.emit('sign in', my_username);
-                $('#myName').empty();
-                $('#myName').append('<strong>'+my_username+'</strong> 님');
-                //$('#userTitle').append('Name : '+my_username);
-            }
-
             //여기서부턴연지코드//
             function getRoomList() {
                 // Ajax를 수행합니다.
@@ -65,18 +27,27 @@
 
             // Socket 처리를 수행합니다.
             var socket = io.connect();
-            socket.on('create_room', function (data) {
+            socket.on('create room', function (data) {
                 // 문서 객체를 추가합니다.
                 $('<button></button>').attr({
                     'data-room': data
                 }).text('Room Number: ' + data).appendTo('#container');
             });
-
+            socket.on('denied',function(data){
+                //여기서 data는 denied된 메세지를 서버에서 반환해준거야!
+                alert(data);
+            });
+            socket.on('accepted', function(data){
+                var room = $(this).attr('data-room');
+                alert(data + '방에 입장하셨습니다');
+                // 페이지를 이동합니다.
+                location = '/chat/' + data;
+            });
             // 이벤트를 연결합니다.
             $('#container').on('click', 'button', function () {
                 // 변수를 선언합니다.
                 var room = $(this).attr('data-room');
-
+                alert('클릭인거냐!!');
                 // 페이지를 이동합니다.
                 location = '/chat/' + room;
             });
@@ -88,6 +59,7 @@
                 // 소켓 이벤트를 발생시킵니다.
                 socket.emit('create_room', room);
 
+                alert('방을 만들었따!!');
                 // 페이지를 이동합니다.
                 location = '/chat/' + room;                
             });
@@ -108,4 +80,3 @@
     </div>
 </body>
 </html>
-

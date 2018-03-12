@@ -7,11 +7,13 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-
 var ejs = require('ejs');
 
-app.set('view engine', 'ejs');
+//레디스 사용
+var redis = require('redis');
+var store = redis.createClient({host:'localhost', port: 6379});
 
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
@@ -31,28 +33,24 @@ var expect = require('chai').expect,
     client = redis.createClient();
 //##end of redis connection
 
-
 app.use(express.static(__dirname));
 
 app.get('/',function(req, res){
     //res.sendFile(__dirname + '/client.html');
     fs.readFile('../public/lobby.html', 'utf-8', function(err, data){
-
-
         res.send(data.toString());
     });
 });
 
+var roomName = null;
+
 app.get('/chat/:room', function(req, res){
     console.log('req.params.room=%s', req.params.room);
-
-
-    fs.readFile('../views/client.ejs','utf8',function(err, data){
+    fs.readFile('../views/chatRoom.ejs','utf8',function(err, data){
         res.send(ejs.render(data,{
             room: req.params.room
         }));
     });
-    res.render('client.ejs',{room: req.params.room});
 });
 
 app.get('/room',function(req, res){
@@ -64,46 +62,40 @@ app.get('/room',function(req, res){
     res.send(rooms);
 });
 
-var count=1;
-var dir= {};
-var online_users = [];
-var MAX_PEERS = 6; //수정필요하당
-
-
-
 /*
 io.on(이벤트, 함수)
 이벤트 발생시 함수 실행 --> 이벤트 리스너
 */
-
+var count = 1;
 //사용자가 사이트에 접속하면 socket.io에 의해 connection이벤트가 자동으로 발생
 io.on('connection', function(socket){
-    //id = socket.id
-    console.log('user connected: ', socket.id);
+    //id를 설정한다
+    id = socket.id
+    console.log('user connected: ', id);
+    //방이름을 저장할 변수
+    roomName = null;
 
     var name = "user" + count++;
     io.to(socket.id).emit('change name', name);
 
-    socket.on('disconnect', function(){
-        console.log('user disconnected: ', socket.id);
+    //방을 생성한다
+    socket.on('create room', function(data){
+        roomName = data.toString();
+        io.sockets.emit('create_room', roomName);
     });
 
-    socket.on('send message', function(name, text){
-        
-        var msg = name+':'+text;
-        console.log(msg);
-        io.emit('receive message', msg);
-        // public 통신
-        //io.sockets.emit('receive message', msg);
-        // broadcast 통신
-        //socket.broadcast.emit(receive message, msg);   
-        // private 통신
-        //io.sockets.to(id).emit(receive message, msg);
+    //방을join
+    socket.on('join', function(data){
+        roomName = data;
+        socket.join(roomName);
+        console.log('socket.rooms:%j', socket.rooms);
     });
 
-    socket.on('create_room', function (data) {
-        io.sockets.emit('create_room', data.toString());
+    //draw : 사용자가 캔버스 위에 그림을 그릴 때 마우스 좌표를 전달할 수 있는 이벤트
+    socket.on('draw', function (data) {
+        io.in(roomName).emit('line', data);
     });
+<<<<<<< HEAD
 });
 
 // FUNCTIONS
@@ -191,72 +183,23 @@ function leaveCurrentChat(username){
         // note: dir[peers[i]] => user object corresponding to this peer
         var j = dir[peers[i]].peers.indexOf(username);  
         dir[peers[i]].peers.splice(j,1);
+=======
+>>>>>>> master
 
-        // notify  peer
-        dir[peers[i]].socket.emit('message', msg);
-    }
-    // clear user's set of peers 
-    dir[username].peers = [];
-}
+    //특정chatroom으로 보내는 message이벤트
+    socket.on('send message',function(data){
+        console.log('%s 채팅방으로 메세지를 전송한다.', data.rndata);
+        var msg = data.name + " : " + data.message;
+        console.log('메세지가 어떻게 나오나 체크해보자', msg);
+        io.sockets.in(data.rndata).emit('receive message', msg);
+    });
 
-// 5
-// adds user2 to user1's current chat group.
-                
-function setupGroupChat(user1,user2){ // user1 = inviter, user2 = invited
-                
-    //  1. disconnect invited/user2 from his or her current peers
-    leaveCurrentChat(user2);
-
-    //  2. connect user2 to user1's peers 
+    socket.on('disconnect', function(){
+        console.log('user disconnected: ', socket.id);
+    });
     
-    // prepare notification message 
-    var msg = {};
-    msg['from'] = 'SERVER';
-    msg['content'] = user1 + ' added ' + user2 + ' to this conversation.';
+});
 
-    for (var i = 0; i < dir[user1].peers.length; i++){
-        
-        var username = dir[user1].peers[i]; 
-        
-        // cross-update subscribers lists
-        dir[user2].peers.push(username); 
-        dir[username].peers.push(user2);
-
-        // notify peer
-        dir[username].socket.emit('message', msg);
-    }
-
-    // 3. finally, pair user1 and user2
-    dir[user2].peers.push(user1);
-    dir[user1].peers.push(user2);
-}
-
-function getTimeStamp() {
-  var d = new Date();
-
-  var s =
-    leadingZeros(d.getFullYear(), 4) + '-' +
-    leadingZeros(d.getMonth() + 1, 2) + '-' +
-    leadingZeros(d.getDate(), 2) + ' ' +
-
-    leadingZeros(d.getHours(), 2) + ':' +
-    leadingZeros(d.getMinutes(), 2) + ':' +
-    leadingZeros(d.getSeconds(), 2);
-
-  return s;
-}
-
-function leadingZeros(n, digits) {
-  var zero = '';
-  var i;
-  n = n.toString();
-
-  if (n.length < digits) {
-    for (i = 0; i < digits - n.length; i++)
-      zero += '0';
-  }
-  return zero + n;
-}
 
 http.listen(3030, function(){
     console.log('server is running at port number 3030');
