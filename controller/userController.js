@@ -23,14 +23,16 @@ var assert = require("assert");
 exports.create = function(req, res) {
 	console.log('/user/signup 처리함');
 	hasher({password:req.body.password}, function(err, pass, salt, hash){
+		
 		var paramId = req.body.id;
 		var paramEmail = req.body.email;
 		var paramPassword = hash;
 		var salt = salt;
+		var winCnt = 0;
+		var gameCnt = 0; 
 		
 		// console.log('id: ' + paramId + ', password : ' + paramPassword + ', email: ' + paramEmail);
-	
-		store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "salt", salt);
+		store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "winCnt", winCnt, "gameCnt", gameCnt, "salt", salt);
 		
 		// 회원가입후 바로 로그인 시켜주기 
 		req.session.displayName = paramId;
