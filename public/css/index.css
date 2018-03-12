@@ -43,6 +43,7 @@ h4 {
     font-family: daylight;
     margin-top:10px;
     font-weight:bold;
+    color:#f2c200;
 }
 
 h3 {
@@ -92,4 +93,10 @@ a.user_sign {
     color:#fff7e4;
     font-family:daylight;
     margin:0 auto;
+}
+
+a.mypage {
+    text-decoration: none;
+    color:#fff7e4;
+    font-family:daylight;
 }
