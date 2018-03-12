@@ -3,8 +3,7 @@
 var express = require('express'), 
     redis = require('redis');
 
-var store = redis.createClient();
-
+var store = redis.createClient({host:'localhost', port: 6379});
 
 /*********************************************************************** 
  *                             Notice Create					   
@@ -14,15 +13,20 @@ var id = 0;
 exports.create = function(req, res) {
     console.log('/notice/create 호출됨.');
 
-    var title = req.body.title;
-    var content = req.body.content;
-    var date = new Date().toISOString().substring(0, 10);
-    var category = req.body.notice_cate;
+    
+    var notice = {
+        id: ++id,
+        title: req.body.title,
+        content: req.body.content,
+        category: req.body.notice_cate,
+        date:new Date().toISOString().substring(0, 10)
+    };
 
     console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
+    store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
+
     res.redirect('/notice.html');
 };
-
 
 /*********************************************************************** 
  *                             Notice Read					   
@@ -31,8 +35,22 @@ exports.create = function(req, res) {
 exports.read = function(req, res){
     console.log('/notice/read 처리함');
 
-};
+    var id = req.body.noticeId;
 
+    store.hgetall('notice:'+ id, function(err, results) {
+		if(results !=null){
+			var notice = {
+                id: id,
+                title: results.title,
+                content: results.content,
+                category: results.category,
+                date: new Date().toISOString().substring(0, 10)
+            };
+		}
+    });
+    console.log('Notice Read= id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + date + 'category: ' + category);
+
+};
 
 /*********************************************************************** 
  *                             Notice Update					   
@@ -40,6 +58,19 @@ exports.read = function(req, res){
 
 exports.update = function(req, res){
     console.log('/notice/update 처리함');
+
+
+    var notice = {
+        id: ++id,
+        title: req.body.title,
+        content: req.body.content,
+        category: req.body.notice_cate,
+        date:new Date().toISOString().substring(0, 10)
+    };
+
+    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
+    store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
+
 
 };
 
