@@ -19,9 +19,8 @@ exports.create = function(req, res) {
     var date = new Date().toISOString().substring(0, 10);
     var category = req.body.notice_cate;
 
-    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + 'category: ' + cat);
-    store.hmset('notice:' + (++id), 'title', title, 'content', content, 'date', date, 'category', category);
-    res.redirect('../notice.html');
+    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
+    res.redirect('/notice.html');
 };
 
 
@@ -49,7 +48,7 @@ exports.update = function(req, res){
  *                             Notice Delete					   
 *************************************************************************/
 
-// 자기가 쓴 글 만 지울 수 있도록 
+// 자기가 쓴 글 만 지울 수 있도록 -> 생각해보니까 공지글이니까..관리자만 권한 주면 될 것 같음
 exports.delete = function(req, res){
     console.log('/notice/delete 처리함');
     var userId = req.user.username;

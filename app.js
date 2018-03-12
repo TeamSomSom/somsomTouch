@@ -63,7 +63,6 @@ passport.deserializeUser(function(id, done) {
 			return done(null, user);
 		}
 	});
-
 });
 
 var bkfd2Password = require("pbkdf2-password");
@@ -71,16 +70,15 @@ var hasher = bkfd2Password();
 var assert = require('assert');
 
 passport.use(new LocalStrategy(
-
 	function(username, password, done) {
 		var uname = username;
 
         store.hgetall('user:'+ username, function(err, results) {
             if(results==null){
-                // console.log('id 없음 ');
+                console.log('id 없음 ');
                 return done(null, false);
             } else{
-                // console.log('id 있음 ');
+                console.log('id 있음 ');
 
                 var user = {
                     username:username,
@@ -88,7 +86,7 @@ passport.use(new LocalStrategy(
                     pwd:results.pwd,
                     email:results.email,
 				};
-				// console.log('username: ' + user.username + ' salt : ' + user.salt + ' pwd: '+ user.pwd +' email: ' +user.email);
+				console.log('username: ' + user.username + ' salt : ' + user.salt + ' pwd: '+ user.pwd +' email: ' +user.email);
 
 				// upwd 암호화하고 비밀번호 체크
 				hasher({password:password, salt:user.salt}, function(err, pass, salt, hash) {
@@ -114,7 +112,6 @@ app.post(
         failureRedirect: '/',
 		failureFlash: true
 	})
-	
 );
 
 /*********************************************************************** 
