@@ -40,6 +40,7 @@ exports.read = function(req, res){
     console.log('/notice/read 처리함');
 
     var notices = [];
+    var noticeFunc;
     store.keys('notice:*', function(err, results){
         results.forEach(function(key){
             store.hgetall(key, function(err, result) {
@@ -51,13 +52,23 @@ exports.read = function(req, res){
                     category: result.category,
                     date: result.date
                 };
-                notices += notice;
-                console.log('id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + notice.date + ', category: ' + notice.category);
-                
+
+                notices.push(notice);
+                noticeFunc = function(req, res, notices){
+                    console.log(notices);
+                    res.render('notice', {notices:notices});
+                }
+                // console.log(notices);
+                // console.log('id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + notice.date + ', category: ' + notice.category);
+                // res.render('notice', {notices:notices});
+
             });
         });
-        res.render('notice', {notices:notices});
+        // console.log(notices);
+        // res.render('notice', {notices:notices});
+        console.log(noticeFunc)
     });
+    // res.render('notice', {notices:notices});
 };
 
 /*********************************************************************** 
