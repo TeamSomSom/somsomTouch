@@ -133,11 +133,11 @@ app.post(
  *                              User LogOut 						   
 *************************************************************************/
 
-app.post('/user/logout', function(req, res){
+app.get('/user/logout', function(req, res){
 	console.log('로그아웃');
 	req.logout();
 	req.session.save(function(){
-		res.redirect('/');
+		res.render('index');
 	})
 });
 
