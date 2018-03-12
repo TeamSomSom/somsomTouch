@@ -39,7 +39,6 @@ exports.read = function(req, res){
     store.keys('notice:*', function(err, results){
         results.forEach(function(key){
             store.hgetall(key, function(err, result) {
-                console.log(key);
 
                 var notice = {
                     id: key,
@@ -50,6 +49,7 @@ exports.read = function(req, res){
                 };
                 notices += notice;
                 console.log('id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + notice.date + ', category: ' + notice.category);
+                
             });
         });
         res.render('notice', {notices:notices});
