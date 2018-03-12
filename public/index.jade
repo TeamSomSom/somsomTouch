@@ -1,0 +1,71 @@
+html
+  head
+    title INDEX
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm', crossorigin='anonymous')
+    link(rel='stylesheet', href='css/index.css', type='text/css')
+  body
+    main(role='main')
+      // 배너자리
+      // <img src="images/background.png"/>
+      center
+        img(src='images/background.png')
+      include header.html
+      .container(style='margin-top:20px')
+        .row
+          // 게임소개배너
+          .col-md-3
+            a(href='#')
+              img(src='images/game_info.png', style='width:260px')
+          // 공지사항
+          #notice.col-md-6
+            h4 NOTICE
+            table.table.table-hover.table-dark
+              thead
+                tr#category
+                  th(scope='col', style='width:100px') *
+                  th(scope='col') TITLE
+                  th(scope='col', style='width:130px') DATE
+              tbody
+                tr
+                  td
+                    | 공지
+                  td 공지사항
+                  td 2018-02-12
+                tr
+                  td
+                    | 이벤트
+                  td 이벤트
+                  td 2018-02-12
+                tr
+                  td
+                    | 패치내역
+                  td 패치내역
+                  td 2018-02-12
+                tr
+                  td(colspan='3')
+                    | ... 최근 4개의 글까지만 보이기 ...
+          // 로그인
+          .col-md-3
+            form(method='POST', action='/user/login')
+              .form-group.row
+                label.col-sm-2.col-form-label(for='staticEmail') ID
+                .col-sm-10
+                  input#inputId.form-control(type='text', name='username', placeholder='id')
+              .form-group.row
+                label.col-sm-2.col-form-label(for='inputPassword') PW
+                .col-sm-10
+                  input#inputPassword.form-control(type='password', name='password', placeholder='password')
+              button.btn.btn-warning.my-2.my-sm-0(type='submit') LOGIN
+              br
+              br
+              .form-group.row(style='align: center')
+                a.user_sign(href='sign_up') 회원가입
+                |  :
+                a.user_sign(href='/find_id_pw') ID/PW찾기
+      hr
+    footer.container
+      p © Company 2017-2018
+      //- p= session.displayName
+    script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q', crossorigin='anonymous')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')

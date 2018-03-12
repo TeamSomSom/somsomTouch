@@ -12,6 +12,10 @@ body {
     font-family: daylight;
 }
 
+#logo {
+    background-color:#f2c200;
+}
+
 nav {
     background-color:#f2c200;
     font-family:daylight;
@@ -44,6 +48,7 @@ h4 {
     font-family: daylight;
     margin-top:10px;
     font-weight:bold;
+    color: #f2c200;
 }
 
 h3 {
@@ -83,14 +88,8 @@ input.form-control {
     border:4px solid #f2c200;
 }
 
-a.btn-warning {
+.btn-warning {
     float:right;
     font-weight:bold;
 }
 
-a.user_sign {
-    text-decoration: none;
-    color:#fff7e4;
-    font-family:daylight;
-    margin:0 auto;
-}

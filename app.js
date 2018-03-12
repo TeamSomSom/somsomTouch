@@ -1,4 +1,4 @@
-// Express 기본 모듈 부르기
+﻿// Express 기본 모듈 부르기
 var express = require('express')
 , http = require('http')
 , path = require('path')
@@ -37,7 +37,49 @@ app.use('/notice', require('./routes/notice'));
 // routing
 var router = express.Router();
 var store = redis.createClient();
+var ajax = require('./routes/ajax')();
+app.use('/ajax', ajax);
 
+
+
+
+/*********************************************************************** 
+ *                             View Engine Setting 						   
+*************************************************************************/
+// view engine setting
+app.locals.pretty = true;
+app.set('view engine', 'jade');
+app.set('views', './public');
+
+//index
+app.get('/', function(req, res){
+	res.render('index');
+});
+
+//jade 테스트용
+// app.get('/template', function(req, res){
+// 	res.render('index_template', {cur_time:Date()});
+// });
+
+//공지사항 게시판
+app.get('/notice', function(req, res){
+	res.render('notice');
+});
+
+//공지사항 글쓰기
+app.get('/notice_write', function(req, res){
+	res.render('notice_write');
+});
+
+//회원가입
+app.get('/sign_up', function(req,res){
+	res.render('sign_up');
+});
+
+//id pw 찾기
+app.get('/find_id_pw', function(req,res){
+	res.render('find_idpw');
+});
 
 /*********************************************************************** 
  *                              User LogIn 						   
