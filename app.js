@@ -31,12 +31,25 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));
 
-app.use('/', require('./routes/user'));
-app.use('/notice', require('./routes/notice'));
-
 // routing
 var router = express.Router();
 var store = redis.createClient({host:'localhost', port: 6379});
+
+// view engine setting
+app.locals.pretty = true;
+app.set('view engine', 'jade');
+app.set('views', './public');
+
+// routing setting 
+app.use('/', require('./routes/user'));
+app.use('/notice', require('./routes/notice'));
+var ajax = require('./routes/ajax')();
+app.use('/ajax', ajax);
+
+//jade 테스트용
+// app.get('/template', function(req, res){
+// 	res.render('index_template', {cur_time:Date()});
+// });
 
 
 /*********************************************************************** 

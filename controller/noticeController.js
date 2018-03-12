@@ -1,9 +1,12 @@
 /**************************** Notice Controller ****************************/
 
 var express = require('express'), 
+    express = require('express'), 
     redis = require('redis');
 
 var store = redis.createClient({host:'localhost', port: 6379});
+var app = express();
+
 /*********************************************************************** 
  *                             Notice Create					   
 *************************************************************************/
@@ -22,7 +25,7 @@ exports.create = function(req, res) {
 
     console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
     store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
-    res.redirect('/notice.html');
+    res.redirect('/notice');
 };
 
 /*********************************************************************** 
@@ -31,8 +34,9 @@ exports.create = function(req, res) {
 
 exports.read = function(req, res){
     console.log('/notice/read 처리함');
-    var id = req.body.noticeId;
 
+    // var id = req.body.noticeId;
+    var id = 1;
     store.hgetall('notice:'+ id, function(err, results) {
 		if(results !=null){
 			var notice = {
@@ -42,9 +46,30 @@ exports.read = function(req, res){
                 category: results.category,
                 date: new Date().toISOString().substring(0, 10)
             };
-		}
+        }
+        console.log('Notice Read= id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + notice.date + ', category: ' + notice.category);
+        res.render('notice');
     });
-    console.log('Notice Read= id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + date + 'category: ' + category);
+};
+
+/*********************************************************************** 
+ *                             Notice Create					   
+*************************************************************************/
+
+var id = 0;
+exports.create = function(req, res) {
+    console.log('/notice/create 호출됨.');
+
+    var notice = {
+        id: ++id,
+        title: req.body.title,
+        content: req.body.content,
+        category: req.body.notice_cate,
+        date:new Date().toISOString().substring(0, 10)
+    };
+
+    console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);    store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
+    res.redirect('/notice');
 };
 
 /*********************************************************************** 
@@ -61,9 +86,10 @@ exports.update = function(req, res){
         category: req.body.notice_cate,
         date:new Date().toISOString().substring(0, 10)
     };
-
     console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
     store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
+
+    res.redirect('/notice');
 
 };
 
@@ -81,5 +107,5 @@ exports.delete = function(req, res){
     store.del('notice:'+ postId, function(req, res){
         res.redirect('../notice.html');
     });
+    res.redirect('/notice');
 };
-

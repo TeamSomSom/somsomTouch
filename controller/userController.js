@@ -11,6 +11,7 @@ var expressSession = require('express-session'),
 var app = express();
 var store = redis.createClient({host:'localhost', port: 6379});
 
+
 /*********************************************************************** 
  *                              User Create  						   
 *************************************************************************/
