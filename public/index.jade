@@ -65,7 +65,7 @@ html
                   a.user_sign(href='/find_id_pw') ID/PW찾기
           -else
             .col-md-3
-              form(method='POST', action='/user/logout')
+              form(method='GET', action='/user/logout')
                 .form-group.row(style='margin-left:10px')
                   h5(style='color:#f2c200; font-weight:bold') #{user}
                   p(style='color:#ffffff; margin-left:3px') 님 환영합니다!

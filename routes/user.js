@@ -3,8 +3,8 @@ var router = express.Router();
 const userController = require('../controller/userController');
 
 router.get('/', function(req, res){
-	console.log('Main에 들어옴'+ req.session.displayName);
-    res.render('index', {user: req.session.displayName});
+	console.log('Main에 들어옴'+ req.user.username);
+    res.render('index', {user: req.user.username});
 });
 router.get('/find_id_pw', function(req, res){
 	res.render('find_idpw');
