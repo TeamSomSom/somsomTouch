@@ -34,6 +34,7 @@ exports.create = function(req, res) {
  *                             Notice Read					   
 *************************************************************************/
 
+
 var notices = [];
 function async1 (results) {
     return new Promise(function(resolve, reject) {
@@ -60,7 +61,7 @@ exports.read = function(req, res){
 	store.keys('notice:*', function(err, results){
         async1(results)
 			.then(notices => {
-                console.log('ㅅㅂfinal');
+                console.log('final');
 				res.render('notice', {notices: notices});
 			})
 	});
