@@ -126,7 +126,7 @@ app.post(
 	passport.authenticate(
 	'local', 
 	{ 
-		successRedirect: '/',
+		successRedirect: '/main',
         failureRedirect: '/',
 		failureFlash: true
 	})
@@ -140,7 +140,7 @@ app.get('/user/logout', function(req, res){
 	console.log('로그아웃');
 	req.logout();
 	req.session.save(function(){
-		res.redirect('/');
+		res.render('index');
 	})
 });
 
@@ -148,27 +148,21 @@ app.get('/user/logout', function(req, res){
  *                              User Mypage  						   
 *************************************************************************/
 
-var isAuthenticated = function (req, res, next) {
-	if (req.isAuthenticated())
-	  return next();
-	res.redirect('/');
-};
+// 첫번째 화면 
+app.get('/', function(req, res){
+	// console.log('/ 접근');
+	res.render('index');
+});
+// 로그인 하고 나서
+app.get('/main', function(req, res){
+	// console.log('/main 접근');
+	res.render('index', {user:req.user.username});
+});
+app.get('/mypage', function(req, res){
+	// res.render('index', {user:req.user.username});
+	res.render('mypage', {user:req.user.username});
+});
 
-app.get('/mypage', isAuthenticated, function (req, res) {
-	store.hgetall('user:'+ req.user.username, function(err, results) {
-		if(results !=null){
-			var user = {
-				username:req.user.username,
-				salt:results.salt,
-				pwd:results.pwd,
-				email:results.email,
-				winRate: results.winRate
-			};
-        }
-        console.log('User: ' + user.username + ' salt : ' + user.salt + ' pwd: '+ user.pwd +' email: ' +user.email, ' winRate: ' + user.winRate);
-        res.render('mypage', {user: user});
-    });
-  });
 
 /*********************************************************************** 
  *	                        	Error Handler
