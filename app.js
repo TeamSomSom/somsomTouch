@@ -50,7 +50,7 @@ app.use('/', require('./routes/user'));
 app.use('/notice', require('./routes/notice'));
 var ajax = require('./routes/ajax')();
 app.use('/ajax', ajax);
-
+app.use('/game', require('./routes/game'))
 //jade 테스트용
 // app.get('/template', function(req, res){
 // 	res.render('index_template', {cur_time:Date()});
