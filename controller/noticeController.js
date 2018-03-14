@@ -7,14 +7,15 @@ var express = require('express'),
 var store = redis.createClient({host:'localhost', port: 6379});
 var app = express();
 
+
 /*********************************************************************** 
  *                             Notice Create					   
 *************************************************************************/
-
+;
 var id = 0;
 exports.create = function(req, res) {
     console.log('/notice/create 호출됨.');
-    
+
     var notice = {
         id: ++id,
         title: req.body.title,
@@ -25,6 +26,7 @@ exports.create = function(req, res) {
 
     console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
     store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
+
     res.redirect('/notice');
 };
 
@@ -32,30 +34,65 @@ exports.create = function(req, res) {
  *                             Notice Read					   
 *************************************************************************/
 
-exports.read = function(req, res){
-    console.log('/notice/read 처리함');
-
-    var notices = [];
-    store.keys('notice:*', function(err, results){
-        results.forEach(function(key){
-            store.hgetall(key, function(err, result) {
-
+var notices = [];
+function async1 (results) {
+    return new Promise(function(resolve, reject) {
+    	var i = 1;
+	    results.forEach(function(){
+            store.hgetall('notice:'+i , function(err, result) {
                 var notice = {
-                    id: key,
+                    id: (i++),
                     title: result.title,
                     content: result.content,
                     category: result.category,
                     date: result.date
                 };
-                notices += notice;
-                console.log('id: ' + notice.id + ', title: ' + notice.title + ', content: ' + notice.content + ', date: ' + notice.date + ', category: ' + notice.category);
                 
+                console.log('id: ' + notice.id + ', title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
+                notices.push(notice);
+                if(i == results.length) resolve(notices); 
             });
         });
-        res.render('notice', {notices:notices});
     });
-};
+}
 
+exports.read = function(req, res){
+	store.keys('notice:*', function(err, results){
+        async1(results)
+			.then(notices => {
+                console.log('ㅅㅂfinal');
+				res.render('notice', {notices: notices});
+			})
+	});
+}
+
+/* 이거 지우지 말자여..... 콜백 지옥입니다요 
+exports.read = function(req, res){
+    console.log('/notice 처리함');
+
+    var notices = [];
+    store.keys('notice:*', function(err, results){
+        var i = 1;
+        console.log('size: ' + results.length);
+        results.forEach(function(){
+            
+            store.hgetall('notice:'+i , function(err, result) {
+            
+                var notice = {
+                    id: i,
+                    title: result.title,
+                    content: result.content,
+                    category: result.category,
+                    date: result.date
+                };
+                console.log('id: ' + notice.id + ', title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
+                notices.push(notice);
+                // res.render('notice', {notices:notices});
+            });
+        });
+    });
+}
+*/
 /*********************************************************************** 
  *                             Notice Create					   
 *************************************************************************/
@@ -94,7 +131,6 @@ exports.update = function(req, res){
     store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
 
     res.redirect('/notice');
-
 };
 
 

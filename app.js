@@ -105,8 +105,26 @@ passport.use(new LocalStrategy(
 				// upwd 암호화하고 비밀번호 체크
 				hasher({password:password, salt:user.salt}, function(err, pass, salt, hash) {
 					if(hash === user.pwd){
+
 						console.log("로그인 성공");
+
+						/******************** 유저 온라인 상태로 전환 *****************/
+						var userId = user.username;
+						
+						console.log('userId - ' + userId + '추가');
+						store.sadd('online', userId, function(err, obj) {
+							if (err) { throw err; }
+						
+							if (obj > 0) {
+								console.log(userId + ' online 되었습니다.');
+							} else {
+								console.log('실패')
+							}
+						});
+						/******************** 유저 온라인 상태로 전환 *****************/
+
 	                    return done(null, user);
+
 					} else {
 						console.log('비밀번호 불일치');
 						return done(null, false);
@@ -135,6 +153,22 @@ app.post(
 
 app.get('/user/logout', function(req, res){
 	console.log('로그아웃');
+
+	/******************** 유저 오프라인 상태로 전환 *****************/
+	var userId = req.user.username;
+    console.log('userId - ' + userId + '삭제');
+
+    store.srem('online', userId, function(err, obj) {
+        if (err) { throw err; }
+
+        if (obj > 0) {
+            console.log(userId + ' offline 되었습니다.');
+        } else {
+            console.log('삭제 실패')
+        }
+	});
+	/******************** 유저 오프라인 상태로 전환 *****************/
+	
 	req.logout();
 	req.session.save(function(){
 		res.render('index');

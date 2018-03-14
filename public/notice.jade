@@ -22,8 +22,17 @@ html
                 th(scope='col', style='width:130px') DATE
             tbody
               tr
-                td
-                  | 공지
+                td #{notices[0].title}
+                td #{notices[0].content}
+                td #{notices[0].date}
+                td #{notices[0].}
+
+              //- each notice in notices
+              //-   p= notice.title
+              //-   p= notice.date
+              //-   p= notice.category
+              tr
+                //- td #{notices[0].title}
                 td 공지사항
                 td 2018-02-12
               tr
@@ -63,6 +72,7 @@ html
                 td 2018-02-12
               tr
                 td(colspan='3')
+
                   a.btn.btn-warning(href='/notice/write') WRITE
         hr
     footer.container
