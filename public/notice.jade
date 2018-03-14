@@ -22,7 +22,11 @@ html
                 th(scope='col', style='width:130px') DATE
             tbody
               tr
-                td #{notices}
+                td #{notices[0].title}
+                td #{notices[0].content}
+                td #{notices[0].date}
+                td #{notices[0].}
+
               //- each notice in notices
               //-   p= notice.title
               //-   p= notice.date
