@@ -52,7 +52,7 @@ exports.read = function(req, res){
                     category: result.category,
                     date: result.date
                 };
-
+                
                 notices.push(notice);
                 noticeFunc = function(req, res, notices){
                     console.log(notices);

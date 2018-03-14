@@ -51,7 +51,14 @@ app.use('/notice', require('./routes/notice'));
 var ajax = require('./routes/ajax')();
 app.use('/ajax', ajax);
 
+/*********************************************************************** 
+ *                             What is Catch Mind 						   
+*************************************************************************/
 
+app.get('/whatisCatchmind', function(req, res){
+	// console.log('/ 접근');
+	res.render('whatiscatchmind');
+});
 
 /*********************************************************************** 
  *                              User LogIn 						   

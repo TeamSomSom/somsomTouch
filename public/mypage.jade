@@ -5,14 +5,36 @@ html
 		link(rel='stylesheet', href='css/mypage.css', type='text/css')
 	body
 		main(role='main')
-			// 메뉴바
-            include header.html
-			.container(style='margin-top:20px')
-				center
-					img(src='images/mypage_logo.png')
-				hr
-		footer.container
-			p © Company 2017-2018
+		//메뉴바
+		include header.html
+		.container(style='margin-top:20px')
+		center
+			img(src='images/mypage_logo.png')
+		.container.user_info
+			.row
+				.col-sm-3
+					center
+						img(src='images/user_logo.png')
+						h4 #{user}
+						p 님의 마이페이지입니다.
+						a.btn.btn-secondary(href='#' style='margin-bottom:10px') UPDATE
+				.col-sm-9.middle
+					table.table.table-hover.info_table
+						thead
+							tr
+								th(scope='col') #
+								th(scope='col')
+						tbody
+							tr
+								th(scope='row') 전적
+								td n승 n패 n무
+							tr
+								th(scope='row') 승률
+								td nn%
+							tr
+								th(scope='row', colspan='2') 여기에 그래프
+
+		hr
 		script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q', crossorigin='anonymous')
 		script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')

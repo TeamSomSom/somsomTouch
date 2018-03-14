@@ -94,3 +94,22 @@ a.user_sign {
     font-family:daylight;
     margin:0 auto;
 }
+div.user_info {
+    background-color:#f2c200;
+    border-radius:0.5em;
+}
+.btn-secondary {
+    background-color:#001d27;
+    color:#f2c200;
+    font-weight:bold;
+}
+
+.info_table {
+    color:#001d27;
+}
+
+.middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
