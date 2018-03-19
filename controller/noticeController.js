@@ -85,7 +85,13 @@ exports.read = function(req, res){
     _promise(true)
     .then(function (text) {
         console.log(text);
-        res.render('notice', {notices:text});
+        console.log(req.user);
+        if (!req.user){
+            res.render('notice', {notices:text});
+        }
+        else{
+            res.render('notice', {notices:text, user:req.user.username});
+        }
     }, function (error) {
         console.log(error);
     });

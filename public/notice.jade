@@ -36,10 +36,13 @@ html
                     //- td #{notice.category}
                     td #{notice.title}
                     td #{notice.date}
-              tr
-                td(colspan='3')
-                  p #{user}
-                  a.btn.btn-warning(href='/notice/write') WRITE
+                  //- tr
+                  //-   td #{user}
+              if user == 'admin'
+                tr
+                  td(colspan='3')
+                    a.btn.btn-warning(href='/notice/write') WRITE
+              else
         hr
     footer.container
       p © Company 2017-2018
