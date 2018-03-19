@@ -208,3 +208,25 @@ exports.delete = function(req, res){
     });
     res.redirect('/notice');
 };
+
+/*********************************************************************** 
+ *                             Notice Detail					   
+*************************************************************************/
+
+exports.detail = function(req, res){
+    console.log('/notice/detail 처리함');
+    
+    
+    var noticeId = req.user.noticeId;
+    store.hgetall('notice:'+ noticeId, function(err, results){
+        var notice = {
+            id: noticeId,
+            title: req.body.title,
+            content: req.body.content,
+            category: req.body.notice_cate,
+            date:new Date().toISOString().substring(0, 10)
+        };
+        console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
+        res.render('detail', {notice: notice});
+    });
+};

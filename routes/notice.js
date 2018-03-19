@@ -9,7 +9,6 @@ router.get('/write', function(req, res){
 router.post('/create', noticeController.create);
 router.post('/update', noticeController.update);
 router.post('/delete', noticeController.delete);
-router.get('/detail', function(req, res){
-	res.render('notice_detail');
-});
+router.post('/detail', noticeController.detail);
+
 module.exports = router;
