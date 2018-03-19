@@ -34,6 +34,7 @@ exports.create = function(req, res) {
  *                             Notice Read					   
 *************************************************************************/
 
+<<<<<<< Updated upstream
 
 var notices = [];
 function async1 (results) {
@@ -52,6 +53,42 @@ function async1 (results) {
                 console.log('id: ' + notice.id + ', title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
                 notices.push(notice);
                 if(i == results.length) resolve(notices); 
+=======
+    var notices = [];
+    var x;
+    var i = 0;
+
+    var _promise = function (param) {
+        return new Promise(function (resolve, reject) {
+
+            store.keys('notice:*', function(err, results){
+                if (err) { reject(err); }
+                x = results.length;
+                // console.log('x : ' + x);
+
+                if (x == 0) { resolve('none'); } // 아무것도없을때
+                else { 
+                    results.forEach(function(key){
+                        store.hgetall(key, function(err, result) {
+                            if (err) { reject(err); }
+
+                            var notice = {
+                                id: key,
+                                title: result.title,
+                                content: result.content,
+                                category: result.category,
+                                date: result.date                            
+                            };
+                            notices.push(notice);
+
+                            ++i;
+                            // console.log('i : ' + i);
+
+                            if (i == x) { resolve(notices); }
+                        });
+                    });
+                }
+>>>>>>> Stashed changes
             });
         });
     });
@@ -149,4 +186,26 @@ exports.delete = function(req, res){
         res.redirect('../notice.html');
     });
     res.redirect('/notice');
+};
+
+/*********************************************************************** 
+ *                             Notice Detail					   
+*************************************************************************/
+
+exports.detail = function(req, res){
+    console.log('/notice/detail 처리함');
+    
+    
+    var noticeId = req.user.noticeId;
+    store.hgetall('notice:'+ noticeId, function(err, results){
+        var notice = {
+            id: noticeId,
+            title: req.body.title,
+            content: req.body.content,
+            category: req.body.notice_cate,
+            date:new Date().toISOString().substring(0, 10)
+        };
+        console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
+        res.render('detail', {notice: notice});
+    });
 };

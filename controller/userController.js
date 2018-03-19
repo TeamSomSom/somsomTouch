@@ -41,7 +41,6 @@ exports.create = function(req, res) {
 		})
 	});
 }
-
 /*********************************************************************** 
  *                              User Update  						   
 *************************************************************************/
@@ -68,6 +67,7 @@ exports.findID = function(req, res){
 
 // 이메일과 아이디를 이용해서 비밀번호 찾기 
 exports.findPwd = function(req, res){
+<<<<<<< Updated upstream
 	// console.log('/user/findPwd 실행');
 
 	store.hgetall('user:'+ req.body.email, function(err, results) {
@@ -75,7 +75,17 @@ exports.findPwd = function(req, res){
 			var randomStr = randomstring.generate(7);
 			res.write('New Password: ' + randomStr);
 			store.hmset('user:'+req.body.email, 'pwd', randomStr);
+=======
+	console.log('/user/findPwd 실행');
+	store.hgetall('user:'+ req.body.username, function(err, results) {
+		if(results!=null && results.email == req.body.email){
+			var randomStr = randomstring.generate(7);
+			res.write('New Password: ' + randomStr);
+			console.log('New Password: ' + randomStr);
+			store.hmset('user:'+req.body.username, 'pwd', randomStr);
+			res.end();	
+>>>>>>> Stashed changes
 		}
 	});
-	res.end();
+	
 };
