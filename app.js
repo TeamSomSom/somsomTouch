@@ -185,10 +185,10 @@ app.get('/user/logout', function(req, res){
         }
 	});
 	/******************** 유저 오프라인 상태로 전환 *****************/
-	
 	req.logout();
-	req.session.save(function(){
-		res.render('index');
+
+	req.session.save(function(){	
+		res.redirect('/');
 	})
 });
 
