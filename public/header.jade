@@ -1,0 +1,25 @@
+doctype html
+// 메뉴바
+nav.navbar.navbar-expand-md.navbar-light
+    .container
+        -if (user == null)
+            a.navbar-brand(href='/')
+                img(src='../images/logo_v2.png')
+        -else
+            a.navbar-brand(href='/main')
+                img(src='../images/logo_v2.png')
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false', aria-label='Toggle navigation')
+            span.navbar-toggler-icon
+        #catchmind_nav.collapse.navbar-collapse
+            ul.navbar-nav.mr-auto
+                li.nav-item
+                    a.nav-link(href='/notice')
+                        | 공지사항
+                        span.sr-only (current)
+                li.nav-item.dropdown
+                    a#dropdown01.nav-link.dropdown-toggle(href='http://example.com', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') 게임안내
+                    .dropdown-menu(aria-labelledby='dropdown01')
+                        a.dropdown-item(href='/whatisCatchmind') 금손을 찾아서란?
+        form.form-inline.my-2.my-lg-0
+            // <button class="btn btn-dark my-2 my-sm-0" type="submit" id="start_game_btn"><a href='/game/random'>게임 시작하기</a></button>
+            a#start_game_btn.btn.btn-dark.my-2.my-sm-0(href='/game/random') 게임 시작하기

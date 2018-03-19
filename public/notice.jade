@@ -9,7 +9,7 @@ html
       // <img src="images/background.png"/>
       center
         img(src='images/background.png')
-      include header.html
+      include header.jade
       .container(style='margin-top:20px')
         #notice.col-md-12
           h3 NOTICE
@@ -21,20 +21,24 @@ html
                 th(scope='col') TITLE
                 th(scope='col', style='width:130px') DATE
             tbody
-              //- tr
-              //-   td #{notices[1].title}
-              //-   td #{notices[1].content}
-              //-   td #{notices[1].date}
-              //-   td #{notices[1].category}
               if notices != 'null'
                 each notice in notices
                   tr
-                    td #{notice.category}
+                    case notice.category
+                      when 'event'
+                        td 이벤트
+                      when 'gongi'
+                        td 공지
+                      when 'patch'
+                        td 패치내역
+                    //- if notice.category == 'event'
+                    //-   td 이벤트
+                    //- td #{notice.category}
                     td #{notice.title}
                     td #{notice.date}
               tr
                 td(colspan='3')
-
+                  p #{user}
                   a.btn.btn-warning(href='/notice/write') WRITE
         hr
     footer.container
