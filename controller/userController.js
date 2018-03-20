@@ -67,24 +67,26 @@ exports.findID = function(req, res){
 
 // 이메일과 아이디를 이용해서 비밀번호 찾기 
 exports.findPwd = function(req, res){
-<<<<<<< Updated upstream
-	// console.log('/user/findPwd 실행');
-
-	store.hgetall('user:'+ req.body.email, function(err, results) {
-		if(results != null && req.body.username == results.username){
-			var randomStr = randomstring.generate(7);
-			res.write('New Password: ' + randomStr);
-			store.hmset('user:'+req.body.email, 'pwd', randomStr);
-=======
 	console.log('/user/findPwd 실행');
 	store.hgetall('user:'+ req.body.username, function(err, results) {
 		if(results!=null && results.email == req.body.email){
 			var randomStr = randomstring.generate(7);
 			res.write('New Password: ' + randomStr);
 			console.log('New Password: ' + randomStr);
-			store.hmset('user:'+req.body.username, 'pwd', randomStr);
+			
+			hasher({password:randomStr}, function(err, pass, salt, hash){
+		
+				var paramId = req.body.username;
+				var paramEmail = req.body.email;
+				var paramPassword = hash;
+				var salt = salt;
+				var winCnt = req.body.winCnt;
+				var gameCnt = req.body.gameCnt; 
+				
+				store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "winCnt", winCnt, "gameCnt", gameCnt, "salt", salt);	
+			});
+			
 			res.end();	
->>>>>>> Stashed changes
 		}
 	});
 	
