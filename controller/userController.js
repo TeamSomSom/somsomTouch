@@ -54,10 +54,11 @@ exports.update = function(req, res){
 		var paramEmail = req.body.email;
 		var paramPassword = hash;
 		var salt = salt;
-		var winCnt = 0;
-		var gameCnt = 0; 
+		// var winCnt = 0;
+		// var gameCnt = 0; 
 
-		store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "winCnt", winCnt, "gameCnt", gameCnt, "salt", salt);
+		// store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "winCnt", winCnt, "gameCnt", gameCnt, "salt", salt);
+		store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "salt", salt);
 	});
 	res.redirect('/');
 };
