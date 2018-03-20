@@ -223,7 +223,8 @@ exports.detail = function(req, res){
     console.log('/notice/detail 처리함');
     
     
-    var noticeId = req.user.noticeId;
+    var noticeId = req.params.id;
+    console.log(noticeId);
     store.hgetall('notice:'+ noticeId, function(err, results){
         var notice = {
             id: noticeId,

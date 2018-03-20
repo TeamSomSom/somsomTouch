@@ -31,13 +31,9 @@ html
                         td 공지
                       when 'patch'
                         td 패치내역
-                    //- if notice.category == 'event'
-                    //-   td 이벤트
-                    //- td #{notice.category}
-                    td #{notice.title}
+                    td
+                      a(href='/detail/#{notice.id}') #{notice.title}
                     td #{notice.date}
-                  //- tr
-                  //-   td #{user}
               if user == 'admin'
                 tr
                   td(colspan='3')
