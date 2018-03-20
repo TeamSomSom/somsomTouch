@@ -11,16 +11,13 @@ var app = express();
 /*********************************************************************** 
  *                             Notice Create					   
 *************************************************************************/
-;
+
 var id = 0;
-<<<<<<< Updated upstream
-=======
 store.keys('notice:*', function(err, key) {
     if (err) { throw err; }
     id = key.length;
 });
 
->>>>>>> Stashed changes
 exports.create = function(req, res) {
     console.log('/notice/create 호출됨.');
 
@@ -42,26 +39,9 @@ exports.create = function(req, res) {
  *                             Notice Read					   
 *************************************************************************/
 
-<<<<<<< Updated upstream
+exports.read = function(req, res){
+    console.log('/notice/read 처리함');
 
-var notices = [];
-function async1 (results) {
-    return new Promise(function(resolve, reject) {
-    	var i = 1;
-	    results.forEach(function(){
-            store.hgetall('notice:'+i , function(err, result) {
-                var notice = {
-                    id: (i++),
-                    title: result.title,
-                    content: result.content,
-                    category: result.category,
-                    date: result.date
-                };
-                
-                console.log('id: ' + notice.id + ', title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
-                notices.push(notice);
-                if(i == results.length) resolve(notices); 
-=======
     var notices = [];
     var x;
     var i = 0;
@@ -72,7 +52,6 @@ function async1 (results) {
             store.keys('notice:*', function(err, results){
                 if (err) { reject(err); }
                 x = results.length;
-                // console.log('x : ' + x);
 
                 if (x == 0) { resolve('none'); } // 아무것도없을때
                 else { 
@@ -88,25 +67,18 @@ function async1 (results) {
                                 date: result.date                            
                             };
                             notices.push(notice);
-
                             ++i;
-                            // console.log('i : ' + i);
-
                             if (i == x) { resolve(notices); }
                         });
                     });
                 }
->>>>>>> Stashed changes
             });
         });
-<<<<<<< Updated upstream
-=======
+
     }; //promise 끝
 
     _promise(true)
     .then(function (text) {
-        // console.log(text);
-        // console.log(req.user);
         if (!req.user){
             res.render('notice', {notices:text});
         }
@@ -115,19 +87,43 @@ function async1 (results) {
         }
     }, function (error) {
         console.log(error);
->>>>>>> Stashed changes
     });
 }
 
-exports.read = function(req, res){
-	store.keys('notice:*', function(err, results){
-        async1(results)
-			.then(notices => {
-                console.log('final');
-				res.render('notice', {notices: notices});
-			})
-	});
-}
+
+////////////////////////////////////////////////////////////////
+// var notices = [];
+// function async1 (results) {
+//     return new Promise(function(resolve, reject) {
+//     	var i = 1;
+// 	    results.forEach(function(){
+//             store.hgetall('notice:'+i , function(err, result) {
+//                 var notice = {
+//                     id: (i++),
+//                     title: result.title,
+//                     content: result.content,
+//                     category: result.category,
+//                     date: result.date
+//                 };
+                
+//                 console.log('id: ' + notice.id + ', title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
+//                 notices.push(notice);
+//                 // if(result.length == 0) resolve(notices);
+//                 if(i == results.length) resolve(notices); 
+//             });
+//         });
+//     });
+// }
+
+// exports.read = function(req, res){
+// 	store.keys('notice:*', function(err, results){
+//         async1(results)
+// 			.then(notices => {
+//                 console.log('final');
+// 				res.render('notice', {notices: notices});
+// 			})
+// 	});
+// }
 
 /* 이거 지우지 말자여..... 콜백 지옥입니다요 
 exports.read = function(req, res){
@@ -219,24 +215,26 @@ exports.delete = function(req, res){
 
 exports.detail = function(req, res){
     console.log('/notice/detail 처리함');
-    
-<<<<<<< Updated upstream
-    
-    var noticeId = req.user.noticeId;
-    store.hgetall('notice:'+ noticeId, function(err, results){
-=======
+
     var noticeId = req.params.id;
 
     store.hgetall(noticeId, function(err, results){
->>>>>>> Stashed changes
         var notice = {
             id: noticeId,
-            title: req.body.title,
-            content: req.body.content,
-            category: req.body.notice_cate,
-            date:new Date().toISOString().substring(0, 10)
+            title: results.title,
+            content: results.content,
+            category: results.category,
+            // date:new Date().toISOString().substring(0, 10)
+            date: results.date
         };
-        // console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
-        res.render('detail', {notice: notice});
+        console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
+
+        if (!req.user){
+            res.render('notice_detail', {notice: notice});
+        }
+        else{
+            res.render('notice_detail', {notice: notice, user:req.user.username});
+        }
+
     });
 };

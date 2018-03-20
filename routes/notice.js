@@ -9,10 +9,6 @@ router.get('/write', function(req, res){
 router.post('/create', noticeController.create);
 router.post('/update', noticeController.update);
 router.post('/delete', noticeController.delete);
-<<<<<<< Updated upstream
-router.post('/detail', noticeController.detail);
-=======
 router.get('/detail/:id', noticeController.detail);
->>>>>>> Stashed changes
 
 module.exports = router;

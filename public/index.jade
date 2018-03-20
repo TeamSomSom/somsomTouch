@@ -9,12 +9,12 @@ html
       // <img src="images/background.png"/>
       center
         img(src='images/background.png')
-      include header.html
+      include header.jade
       .container(style='margin-top:20px')
         .row
           // 게임소개배너
           .col-md-3
-            a(href='#')
+            a(href='/whatisCatchmind')
               img(src='images/game_info.png', style='width:260px')
           // 공지사항
           #notice.col-md-6
@@ -35,7 +35,7 @@ html
                   td
                     | 이벤트
                   td 이벤트
-                  td 2018-02-12
+                  td #{notices[0].title}
                 tr
                   td
                     | 패치내역
@@ -45,27 +45,37 @@ html
                   td(colspan='3')
                     | ... 최근 4개의 글까지만 보이기 ...
           // 로그인
-          .col-md-3
-            form(method='POST', action='/user/login')
-              .form-group.row
-                label.col-sm-2.col-form-label(for='staticEmail') ID
-                .col-sm-10
-                  input#inputId.form-control(type='text', name='username', placeholder='id')
-              .form-group.row
-                label.col-sm-2.col-form-label(for='inputPassword') PW
-                .col-sm-10
-                  input#inputPassword.form-control(type='password', name='password', placeholder='password')
-              button.btn.btn-warning.my-2.my-sm-0(type='submit') LOGIN
-              br
-              br
-              .form-group.row(style='align: center')
-                a.user_sign(href='/sign_up') 회원가입
-                |  :
-                a.user_sign(href='/find_id_pw') ID/PW찾기
+          -if (user == null)
+            .col-md-3
+              form(method='POST', action='/user/login')
+                .form-group.row
+                  label.col-sm-2.col-form-label(for='staticEmail') ID
+                  .col-sm-10
+                    input#inputId.form-control(type='text', name='username', placeholder='id')
+                .form-group.row
+                  label.col-sm-2.col-form-label(for='inputPassword') PW
+                  .col-sm-10
+                    input#inputPassword.form-control(type='password', name='password', placeholder='password')
+                button.btn.btn-warning.my-2.my-sm-0(type='submit') LOGIN
+                br
+                br
+                .form-group.row(style='align: center')
+                  a.user_sign(href='/sign_up') 회원가입
+                  |  :
+                  a.user_sign(href='/find_id_pw') ID/PW찾기
+          -else
+            .col-md-3
+              form(method='GET', action='/user/logout')
+                .form-group.row(style='margin-left:10px')
+                  h5(style='color:#f2c200; font-weight:bold') #{user.username}
+                  p(style='color:#ffffff; margin-left:3px') 님 환영합니다!
+                .form-group.row(style='margin-left:10px; margin-top:-20px')
+                    a.mypage(href='/mypage') ▶마이페이지
+                button.btn.btn-warning.my-2.my-sm-0(type='submit') LOGOUT
       hr
     footer.container
       p © Company 2017-2018
-      //- p= session.displayName
+      
     script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q', crossorigin='anonymous')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')

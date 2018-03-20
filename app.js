@@ -140,7 +140,7 @@ app.post(
 	passport.authenticate(
 	'local', 
 	{ 
-		successRedirect: '/main',
+		successRedirect: '/',
         failureRedirect: '/',
 		failureFlash: true
 	})
@@ -179,21 +179,62 @@ app.get('/user/logout', function(req, res){
  *                              User Mypage  						   
 *************************************************************************/
 
-// 첫번째 화면 
-app.get('/', function(req, res){
-	// console.log('/ 접근');
-	res.render('index');
-});
-// 로그인 하고 나서
-app.get('/main', function(req, res){
-	// console.log('/main 접근');
-	res.render('index', {user:req.user.username});
-});
 app.get('/mypage', function(req, res){
 	// res.render('index', {user:req.user.username});
 	res.render('mypage', {user:req.user.username});
 });
 
+app.get('/', function(req, res){
+	console.log(req.user)
+
+	var notices = [];
+    var x;
+    var i = 0;
+
+    var _promise = function (param) {
+        return new Promise(function (resolve, reject) {
+
+            store.keys('notice:*', function(err, results){
+                if (err) { reject(err); }
+                x = results.length;
+
+                if (x == 0) { resolve('none'); } // 아무것도없을때
+                else { 
+                    results.forEach(function(key){
+                        store.hgetall(key, function(err, result) {
+                            if (err) { reject(err); }
+
+                            var notice = {
+                                id: key,
+                                title: result.title,
+                                content: result.content,
+                                category: result.category,
+                                date: result.date                            
+                            };
+                            notices.push(notice);
+                            ++i;
+                            if (i == x) { resolve(notices); }
+                        });
+                    });
+                }
+            });
+        });
+
+    }; //promise 끝
+
+    _promise(true)
+    .then(function (text) {
+        if (!req.user){
+            res.render('index', {notices:text});
+        }
+        else{
+			res.render('index', {notices:text, user:req.user.username});
+        }
+    }, function (error) {
+        console.log(error);
+	});
+
+});
 
 /*********************************************************************** 
  *	                        	Error Handler
