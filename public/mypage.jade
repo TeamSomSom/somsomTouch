@@ -15,9 +15,9 @@ html
 				.col-sm-3
 					center
 						img(src='images/user_logo.png')
-						h4 #{user}
+						h4 #{user.username}
 						p 님의 마이페이지입니다.
-						a.btn.btn-secondary(href='#' style='margin-bottom:10px') UPDATE
+						a.btn.btn-secondary(href='/user_update' style='margin-bottom:10px') UPDATE
 				.col-sm-9.middle
 					table.table.table-hover.info_table
 						thead
@@ -27,10 +27,16 @@ html
 						tbody
 							tr
 								th(scope='row') 전적
-								td n승 n패 n무
+								-if (!user.gameCnt)
+									td 아직 게임을 즐기지 않았습니다!
+								-else
+									td #{user.gameCnt}
 							tr
 								th(scope='row') 승률
-								td nn%
+								-if (!user.winCnt)
+									td 아직 게임을 즐기지 않았습니다!
+								-else
+									td #{user.winCnt}
 							tr
 								th(scope='row', colspan='2') 여기에 그래프
 

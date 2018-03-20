@@ -208,7 +208,7 @@ app.get('/main', function(req, res){
 });
 app.get('/mypage', function(req, res){
 	// res.render('index', {user:req.user.username});
-	res.render('mypage', {user:req.user.username});
+	res.render('mypage', {user:req.user});
 });
 
 

@@ -46,8 +46,10 @@ exports.create = function(req, res) {
 *************************************************************************/
 
 exports.update = function(req, res){
-	// console.log('/user/update 처리함');
-	store.hset('user:'+ req.user.username, 'pwd', req.body.pwd, 'email', req.body.email);
+	console.log('/user/update 처리함');
+	console.log('user:'+ req.user.username, 'pwd', req.body.password, 'email', req.body.email);
+	store.hmset('user:'+ req.user.username, 'pwd', req.body.password, 'email', req.body.email);
+	res.redirect('/');
 };
 
 /*********************************************************************** 
@@ -71,8 +73,8 @@ exports.findPwd = function(req, res){
 	store.hgetall('user:'+ req.body.username, function(err, results) {
 		if(results!=null && results.email == req.body.email){
 			var randomStr = randomstring.generate(7);
-			res.write('New Password: ' + randomStr);
-			console.log('New Password: ' + randomStr);
+			// res.write('New Password: ' + randomStr);
+			// console.log('New Password: ' + randomStr);
 			
 			hasher({password:randomStr}, function(err, pass, salt, hash){
 		
@@ -86,7 +88,8 @@ exports.findPwd = function(req, res){
 				store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "winCnt", winCnt, "gameCnt", gameCnt, "salt", salt);	
 			});
 			
-			res.end();	
+			res.end();
+			// res.render('/new_password', {user:req.body.username, newpwd:randomStr});	
 		}
 	});
 	
