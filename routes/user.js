@@ -13,7 +13,7 @@ router.get('/user_update', function(req,res){
 });
 router.post('/user/create', userController.create);
 router.post('/user/update', userController.update);
-router.post('/user/findID', userController.findID);
+router.post('/user/findId', userController.findId);
 router.post('/user/findPwd', userController.findPwd);
 
 module.exports = router;
