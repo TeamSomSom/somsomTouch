@@ -35,7 +35,7 @@ html
                   td
                     | 이벤트
                   td 이벤트
-                  td 2018-02-12
+                  td #{notices[0].title}
                 tr
                   td
                     | 패치내역
@@ -67,7 +67,7 @@ html
             .col-md-3
               form(method='GET', action='/user/logout')
                 .form-group.row(style='margin-left:10px')
-                  h5(style='color:#f2c200; font-weight:bold') #{user}
+                  h5(style='color:#f2c200; font-weight:bold') #{user.username}
                   p(style='color:#ffffff; margin-left:3px') 님 환영합니다!
                 .form-group.row(style='margin-left:10px; margin-top:-20px')
                     a.mypage(href='/mypage') ▶마이페이지

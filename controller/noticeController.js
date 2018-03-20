@@ -38,7 +38,7 @@ exports.create = function(req, res) {
 /*********************************************************************** 
  *                             Notice Read					   
 *************************************************************************/
-// 나영
+
 exports.read = function(req, res){
     console.log('/notice/read 처리함');
 
@@ -89,6 +89,7 @@ exports.read = function(req, res){
         console.log(error);
     });
 }
+
 
 ////////////////////////////////////////////////////////////////
 // var notices = [];

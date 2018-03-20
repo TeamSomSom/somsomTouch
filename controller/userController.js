@@ -47,8 +47,18 @@ exports.create = function(req, res) {
 
 exports.update = function(req, res){
 	console.log('/user/update 처리함');
-	console.log('user:'+ req.user.username, 'pwd', req.body.password, 'email', req.body.email);
-	store.hmset('user:'+ req.user.username, 'pwd', req.body.password, 'email', req.body.email);
+
+	hasher({password:req.body.password}, function(err, pass, salt, hash){
+		
+		var paramId = req.body.id;
+		var paramEmail = req.body.email;
+		var paramPassword = hash;
+		var salt = salt;
+		var winCnt = 0;
+		var gameCnt = 0; 
+
+		store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "winCnt", winCnt, "gameCnt", gameCnt, "salt", salt);
+	});
 	res.redirect('/');
 };
 
@@ -73,23 +83,22 @@ exports.findPwd = function(req, res){
 	store.hgetall('user:'+ req.body.username, function(err, results) {
 		if(results!=null && results.email == req.body.email){
 			var randomStr = randomstring.generate(7);
-			// res.write('New Password: ' + randomStr);
-			// console.log('New Password: ' + randomStr);
-			
+
+			console.log(results.winCnt + ", " + results.gameCnt)
 			hasher({password:randomStr}, function(err, pass, salt, hash){
 		
 				var paramId = req.body.username;
 				var paramEmail = req.body.email;
 				var paramPassword = hash;
 				var salt = salt;
-				var winCnt = req.body.winCnt;
-				var gameCnt = req.body.gameCnt; 
+				var winCnt = results.winCnt;
+				var gameCnt = results.winCnt; 
 				
-				store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "winCnt", winCnt, "gameCnt", gameCnt, "salt", salt);	
+				store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "salt", salt);	
 			});
 			
 			res.end();
-			// res.render('/new_password', {user:req.body.username, newpwd:randomStr});	
+			res.render('new_password', {user:req.user.username, newpwd:randomStr});	
 		}
 	});
 	
