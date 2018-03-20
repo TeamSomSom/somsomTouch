@@ -1,0 +1,29 @@
+<html>
+<head>
+    <link rel="stylesheet" href="css/loading_test.css">
+    <style type="text/css">
+    #loading {
+       height: 150vw;
+    }
+    #loading-image{
+        margin-top: 330pt;
+        /* height: 200pt;
+        width: 400pt; */
+    }
+    </style>
+<!-- 이런식으로 페이지 내에서 추가적으로 기능을 수정할 수 있다 -->
+<title> loading_test </title>
+</head>
+<body>   
+    <div id="loading">
+        <img id="loading-image" src="images/ajax-loader.gif" alt="Loading..." />
+    </div>
+
+    <script type="text/javascript">
+        window.onbeforeunload = function () { $('#loading').show(); }  //현재 페이지에서 다른 페이지로 넘어갈 때 표시해주는 기능
+        $(window).load(function () {          //페이지가 로드 되면 로딩 화면을 없애주는 것
+            $('#loading').hide();
+        });
+    </script>
+</body>
+</html>

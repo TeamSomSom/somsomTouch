@@ -1,0 +1,13 @@
+#loading {
+    width: 100vw;
+    height: 40vw;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: block;
+    /* opacity: 0.7; */
+    background-color:#001d27;
+    z-index: 99;
+    text-align: center;
+ }
+ 
