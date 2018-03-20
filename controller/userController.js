@@ -66,6 +66,8 @@ exports.findID = function(req, res){
 // 이메일과 아이디를 이용해서 비밀번호 찾기 
 exports.findPwd = function(req, res){
 	console.log('/user/findPwd 실행');
+	console.log(req.body.username);
+	console.log(req.body.email);
 	store.hgetall('user:'+ req.body.username, function(err, results) {
 		if(results!=null && results.email == req.body.email){
 			var randomStr = randomstring.generate(7);

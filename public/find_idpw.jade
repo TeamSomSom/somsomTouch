@@ -21,16 +21,16 @@ html
 								input#findIdEmail.form-control(type='email', aria-describedby='emailHelp', placeholder='이메일을 입력하세요.')
 							button.btn.btn-warning.btn-lg.btn-block(type='submit') ID 찾기
 					.col-md-6
-						form
+						form(method='POST', action='/user/findPwd')
 							center
 								h4 PASSWORD 찾기
 							br
 							.form-group
 								label(for='findPwEmail') EMAIL
-								input#findPwEmail.form-control(type='email', aria-describedby='emailHelp', placeholder='이메일을 입력하세요.')
+								input#findPwEmail.form-control(type='email', name='email', aria-describedby='emailHelp', placeholder='이메일을 입력하세요.')
 							.form-group
 								label(for='findPwId') ID
-								input#findPwId.form-control(type='text', aria-describedby='emailHelp', placeholder='아이디를 입력하세요.')
+								input#findPwId.form-control(type='text', name='username', aria-describedby='emailHelp', placeholder='아이디를 입력하세요.')
 							button.btn.btn-warning.btn-lg.btn-block(type='submit') PW 찾기
 		footer.container
 			p © Company 2017-2018
