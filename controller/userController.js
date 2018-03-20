@@ -73,9 +73,20 @@ exports.findPwd = function(req, res){
 			var randomStr = randomstring.generate(7);
 			res.write('New Password: ' + randomStr);
 			console.log('New Password: ' + randomStr);
-			store.hmset('user:'+req.body.username, 'pwd', randomStr);
+			
+			hasher({password:randomStr}, function(err, pass, salt, hash){
+		
+				var paramId = req.body.username;
+				var paramEmail = req.body.email;
+				var paramPassword = hash;
+				var salt = salt;
+				var winCnt = req.body.winCnt;
+				var gameCnt = req.body.gameCnt; 
+				
+				store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "winCnt", winCnt, "gameCnt", gameCnt, "salt", salt);	
+			});
+			
 			res.end();	
-
 		}
 	});
 	
