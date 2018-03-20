@@ -47,6 +47,7 @@ exports.create = function(req, res) {
 
 exports.update = function(req, res){
 	console.log('/user/update 처리함');
+
 	hasher({password:req.body.password}, function(err, pass, salt, hash){
 		
 		var paramId = req.body.id;
@@ -67,8 +68,34 @@ exports.update = function(req, res){
 *************************************************************************/
 
 // 이메일을 이용해서 ID 찾기 
-exports.findID = function(req, res){
-	store.hgetall('user')
+exports.findId = function(req, res){
+	console.log('/user/findId 실행');
+	var email = req.body.email;
+	var id="";
+
+	var _promise = function (param) {
+        return new Promise(function (resolve, reject) {	
+
+			store.keys('user:*', function(err, results){
+				results.forEach(function(key){
+					store.hgetall(key, function(err, result) {
+						if (err) { reject(err); }
+						id = key.substring(5,9);
+						if(result.email == email){
+							resolve(id);	
+						}
+					});
+				});
+			})
+		})
+	}
+
+	_promise(true)
+    .then(function (text) {
+        res.render('new_id', {id:id}); // front 에서 user가 "" 이면 못찾은걸로 인식
+    }, function (error) {
+        console.log(error);
+	});
 };
 
 /*********************************************************************** 
@@ -78,13 +105,14 @@ exports.findID = function(req, res){
 // 이메일과 아이디를 이용해서 비밀번호 찾기 
 exports.findPwd = function(req, res){
 	console.log('/user/findPwd 실행');
+	
 	console.log(req.body.username);
 	console.log(req.body.email);
+
 	store.hgetall('user:'+ req.body.username, function(err, results) {
 		if(results!=null && results.email == req.body.email){
 			var randomStr = randomstring.generate(7);
 
-			console.log(results.winCnt + ", " + results.gameCnt)
 			hasher({password:randomStr}, function(err, pass, salt, hash){
 		
 				var paramId = req.body.username;
@@ -96,9 +124,8 @@ exports.findPwd = function(req, res){
 				
 				store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "salt", salt);	
 			});
-			
-			res.end();
-			res.render('new_password', {user:req.body.username, newpwd:randomStr});	
+
+			res.render('new_password', {user:req.user, newpwd:randomStr});	
 		}
 	});
 	
