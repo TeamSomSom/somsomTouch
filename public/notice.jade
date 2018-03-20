@@ -21,6 +21,7 @@ html
                 th(scope='col') TITLE
                 th(scope='col', style='width:130px') DATE
             tbody
+<<<<<<< Updated upstream
               tr
                 td #{notices[0].title}
                 td #{notices[0].content}
@@ -74,6 +75,26 @@ html
                 td(colspan='3')
 
                   a.btn.btn-warning(href='/notice/write') WRITE
+=======
+              if notices != 'null'
+                each notice in notices
+                  tr
+                    case notice.category
+                      when 'event'
+                        td 이벤트
+                      when 'gongi'
+                        td 공지
+                      when 'patch'
+                        td 패치내역
+                    td
+                      a(href='/notice/detail/#{notice.id}') #{notice.title}
+                    td #{notice.date}
+              if user == 'admin'
+                tr
+                  td(colspan='3')
+                    a.btn.btn-warning(href='/notice/write') WRITE
+              else
+>>>>>>> Stashed changes
         hr
     footer.container
       p © Company 2017-2018

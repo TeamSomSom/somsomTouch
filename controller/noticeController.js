@@ -13,6 +13,14 @@ var app = express();
 *************************************************************************/
 ;
 var id = 0;
+<<<<<<< Updated upstream
+=======
+store.keys('notice:*', function(err, key) {
+    if (err) { throw err; }
+    id = key.length;
+});
+
+>>>>>>> Stashed changes
 exports.create = function(req, res) {
     console.log('/notice/create 호출됨.');
 
@@ -24,7 +32,7 @@ exports.create = function(req, res) {
         date:new Date().toISOString().substring(0, 10)
     };
 
-    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
+    // console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
     store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
 
     res.redirect('/notice');
@@ -91,6 +99,23 @@ function async1 (results) {
 >>>>>>> Stashed changes
             });
         });
+<<<<<<< Updated upstream
+=======
+    }; //promise 끝
+
+    _promise(true)
+    .then(function (text) {
+        // console.log(text);
+        // console.log(req.user);
+        if (!req.user){
+            res.render('notice', {notices:text});
+        }
+        else{
+            res.render('notice', {notices:text, user:req.user.username});
+        }
+    }, function (error) {
+        console.log(error);
+>>>>>>> Stashed changes
     });
 }
 
@@ -147,7 +172,7 @@ exports.create = function(req, res) {
         date:new Date().toISOString().substring(0, 10)
     };
 
-    console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);    store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
+    // console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);    store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
     res.redirect('/notice');
 };
 
@@ -165,7 +190,7 @@ exports.update = function(req, res){
         category: req.body.notice_cate,
         date:new Date().toISOString().substring(0, 10)
     };
-    console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
+    // console.log('title : ' + title + ', content : ' + content + ', date : ' + date + ', category : ' + category);
     store.hmset('notice:'+ notice.id, 'title', notice.title, 'content', notice.content, 'category', notice.category, 'date', notice.date);
 
     res.redirect('/notice');
@@ -195,9 +220,15 @@ exports.delete = function(req, res){
 exports.detail = function(req, res){
     console.log('/notice/detail 처리함');
     
+<<<<<<< Updated upstream
     
     var noticeId = req.user.noticeId;
     store.hgetall('notice:'+ noticeId, function(err, results){
+=======
+    var noticeId = req.params.id;
+
+    store.hgetall(noticeId, function(err, results){
+>>>>>>> Stashed changes
         var notice = {
             id: noticeId,
             title: req.body.title,
@@ -205,7 +236,7 @@ exports.detail = function(req, res){
             category: req.body.notice_cate,
             date:new Date().toISOString().substring(0, 10)
         };
-        console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
+        // console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
         res.render('detail', {notice: notice});
     });
 };
