@@ -220,12 +220,20 @@ exports.detail = function(req, res){
     store.hgetall(noticeId, function(err, results){
         var notice = {
             id: noticeId,
-            title: req.body.title,
-            content: req.body.content,
-            category: req.body.notice_cate,
-            date:new Date().toISOString().substring(0, 10)
+            title: results.title,
+            content: results.content,
+            category: results.category,
+            // date:new Date().toISOString().substring(0, 10)
+            date: results.date
         };
-        // console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
-        res.render('detail', {notice: notice});
+        console.log('title : ' + notice.title + ', content : ' + notice.content + ', date : ' + notice.date + ', category : ' + notice.category);
+
+        if (!req.user){
+            res.render('notice_detail', {notice: notice});
+        }
+        else{
+            res.render('notice_detail', {notice: notice, user:req.user.username});
+        }
+
     });
 };

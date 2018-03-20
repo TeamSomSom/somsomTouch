@@ -6,6 +6,12 @@ a {
     font-weight: bold;
 }
 
+a.title {
+    color:#f1f1f1;
+    font-weight: bold;
+    text-decoration: none;
+}
+
 body {
     background:#001d27;
     color:#f1f1f1;

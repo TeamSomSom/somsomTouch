@@ -32,7 +32,7 @@ html
                       when 'patch'
                         td 패치내역
                     td
-                      a(href='/notice/detail/#{notice.id}') #{notice.title}
+                      a.title(href='/notice/detail/#{notice.id}') #{notice.title}
                     td #{notice.date}
               if user == 'admin'
                 tr
