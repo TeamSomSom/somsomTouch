@@ -26,24 +26,25 @@ html
                   th(scope='col') TITLE
                   th(scope='col', style='width:130px') DATE
               tbody
-                tr
-                  td
-                    | 공지
-                  td 공지사항
-                  td 2018-02-12
-                tr
-                  td
-                    | 이벤트
-                  td 이벤트
-                  td #{notices[0].title}
-                tr
-                  td
-                    | 패치내역
-                  td 패치내역
-                  td 2018-02-12
+                if notices != 'null'
+                  if notices.length <4
+                    each notice in notices
+                      tr
+                        td #{notice.category}
+                        td #{notice.title}
+                        td #{notice.date}
+                  else
+                    - for(var i=0; i<4; i++)
+                      tr
+                        td #{notices[i].category}
+                        td #{notices[i].title}
+                        td #{notices[i].date}
+                else
+                  tr
+                    td(colspan='3') 현재 공지사항이 없습니다!
                 tr
                   td(colspan='3')
-                    | ... 최근 4개의 글까지만 보이기 ...
+                    a.user_sign(href='/notice') 더보기
           // 로그인
           -if (user == null)
             .col-md-3
@@ -70,12 +71,12 @@ html
                   h5(style='color:#f2c200; font-weight:bold') #{user.username}
                   p(style='color:#ffffff; margin-left:3px') 님 환영합니다!
                 .form-group.row(style='margin-left:10px; margin-top:-20px')
-                    a.mypage(href='/mypage') ▶마이페이지
+                  a.mypage(href='/mypage') ▶마이페이지
                 button.btn.btn-warning.my-2.my-sm-0(type='submit') LOGOUT
       hr
     footer.container
       p © Company 2017-2018
-      
+
     script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q', crossorigin='anonymous')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js', integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl', crossorigin='anonymous')
