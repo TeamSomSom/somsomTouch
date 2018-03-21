@@ -71,7 +71,8 @@ exports.update = function(req, res){
 exports.findId = function(req, res){
 	console.log('/user/findId 실행');
 	var email = req.body.email;
-	var id="";
+	var id = "";
+	var cnt = 1;
 
 	var _promise = function (param) {
         return new Promise(function (resolve, reject) {	
@@ -80,12 +81,12 @@ exports.findId = function(req, res){
 				results.forEach(function(key){
 					store.hgetall(key, function(err, result) {
 						if (err) { reject(err); }
-						
-						id = key.substring(5, );
-						// console.log(id)
 
 						if(result.email == email){
-							// console.log('찾음 id= ' + id)
+							id = key.substring(5);
+							resolve(id);	
+						}
+						if((cnt++) == results.length){
 							resolve(id);	
 						}
 					});
@@ -128,8 +129,9 @@ exports.findPwd = function(req, res){
 				
 				store.hmset("user:"+paramId, "pwd", paramPassword, "email", paramEmail, "salt", salt);	
 			});
-
 			res.render('new_password', {user:req.user, newpwd:randomStr});	
+		} else {
+			res.render('new_password', {user:""});	
 		}
 	});
 	
