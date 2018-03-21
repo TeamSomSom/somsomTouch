@@ -80,8 +80,12 @@ exports.findId = function(req, res){
 				results.forEach(function(key){
 					store.hgetall(key, function(err, result) {
 						if (err) { reject(err); }
+						
 						id = key.substring(5,9);
+						// console.log(id)
+
 						if(result.email == email){
+							// console.log('찾음 id= ' + id)
 							resolve(id);	
 						}
 					});
@@ -91,7 +95,7 @@ exports.findId = function(req, res){
 	}
 
 	_promise(true)
-    .then(function (text) {
+    .then(function (id) {
         res.render('new_id', {id:id}); // front 에서 user가 "" 이면 못찾은걸로 인식
     }, function (error) {
         console.log(error);
