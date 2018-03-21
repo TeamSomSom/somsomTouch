@@ -1,0 +1,26 @@
+body {
+    /* background-image:url(../images/new_password_logo.png); */
+    /* background-size:100%; */
+    background-repeat:no-repeat;
+    background-color:#001d27;
+    background-attachment:fixed; 
+    background-position:center center;
+}
+
+#logo {
+    margin-top:100px;
+}
+
+h4 {
+    font-family: daylight;
+    margin-top:10px;
+    font-weight:bold;
+    color:#f2c200;
+}
+
+h6 {
+    font-family: daylight;
+    margin-top:10px;
+    font-weight:bold;
+    color:#fff7e4;
+}

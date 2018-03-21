@@ -81,7 +81,7 @@ exports.findId = function(req, res){
 					store.hgetall(key, function(err, result) {
 						if (err) { reject(err); }
 						
-						id = key.substring(5,9);
+						id = key.substring(5, );
 						// console.log(id)
 
 						if(result.email == email){

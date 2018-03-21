@@ -2,12 +2,23 @@ html
     head
         title ID 찾기
         link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm', crossorigin='anonymous')
-        link(rel='stylesheet', href='css/new_pwd_page.css', type='text/css')
+        link(rel='stylesheet', href='../css/new_id_page.css', type='text/css')
     body
         .container
             #logo.text-center
-                img(src='images/new_password_logo.png')
-                h4 찾으시는 아이디는 #{id} 입니다.
+                img(src='../images/new_id_logo.png')
+                if id != ""
+                    h6 당신의 아이디는
+                    h4 #{id}
+                    h6 입니다.
+                    hr
+                    a.btn.btn-warning(href='/') GO MAIN
+                else
+                    h6 해당 아이디는 존재하지 않습니다.
+                    h4 새롭게 캐치마인드 회원이 되어주세요!
+                    hr
+                    a.btn.btn-warning(href='/sign_up') 회원가입
+                
         
         footer.my-5.pt-5.text-muted.text-center.text-small
             p.mb-1 © 2017-2018 Company Name
