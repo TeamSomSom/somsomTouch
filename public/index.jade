@@ -30,13 +30,25 @@ html
                   if notices.length <4
                     each notice in notices
                       tr
-                        td #{notice.category}
+                        case notice.category
+                          when 'event'
+                            td 이벤트
+                          when 'gongi'
+                            td 공지
+                          when 'patch'
+                            td 패치내역
                         td #{notice.title}
                         td #{notice.date}
                   else
-                    - for(var i=0; i<4; i++)
+                    - for(var i=notices.length-1; i>=notices.length-4; i--)
                       tr
-                        td #{notices[i].category}
+                        case notices[i].category
+                          when 'event'
+                            td 이벤트
+                          when 'gongi'
+                            td 공지
+                          when 'patch'
+                            td 패치내역
                         td #{notices[i].title}
                         td #{notices[i].date}
                 else
